@@ -1,0 +1,16 @@
+bookdown::gitbook:
+  # includes:
+  #   in_header: [google_analytics.html]
+  number_sections: false
+  config:
+    # toc_depth: 0
+    toc:
+      scroll_highlight: yes
+      collapse: section
+      before: |
+        <li><a href="./">mar 221f</a></li>
+      after: null
+    toolbar:
+      position: static
+    sharing: no
+    download: yes

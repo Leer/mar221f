@@ -1,0 +1,23 @@
+book_filename: "product_analytics"
+delete_merged_file: true
+output_dir: "book-output"
+new_session: yes
+rmd_files: [
+  'index.Rmd',
+  '1_intro.Rmd',
+  # '2_engagement.Rmd',
+  # '3_engagement.Rmd',
+  # '4_monetization.Rmd',
+  # '5_monetization.Rmd',
+  # '6_funnels.Rmd',
+  # '6_ux.Rmd',
+  # 'hw_1.Rmd',
+  # '7_sql.Rmd',
+  # '8_sql.Rmd',
+  # '9_abtest.Rmd',
+  # '11_nhst.Rmd',
+  # '12_power.Rmd',
+  # '13_case.Rmd',
+  # 'hw_2.Rmd',
+  # '14_interview.Rmd'
+]
