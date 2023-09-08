@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru-RU" xml:lang="ru-RU">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Методы анализа больших данных</title>
+  <meta name="description" content="Методы анализа больших данных" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Методы анализа больших данных" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Методы анализа больших данных" />
+  
+  
+  
+
+<meta name="author" content="Ph.A.Upravitelev" />
+
+
+<meta name="date" content="2023-09-08" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="c1_intro.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">mar 221f</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html"><i class="fa fa-check"></i>О курсе и аналитиках</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#запись-занятия"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#обо-мне"><i class="fa fa-check"></i>Обо мне</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#contacts"><i class="fa fa-check"></i>Contacts</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#о-курсе"><i class="fa fa-check"></i>О курсе</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#темы-лекций"><i class="fa fa-check"></i>темы лекций</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#факультативно"><i class="fa fa-check"></i>факультативно</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#формы-контроля"><i class="fa fa-check"></i>формы контроля</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#виды-аналитиков"><i class="fa fa-check"></i>Виды аналитиков</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#data-scientists"><i class="fa fa-check"></i>data scientists</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#web-аналитика"><i class="fa fa-check"></i>web-аналитика</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#маркетинговая-аналитика"><i class="fa fa-check"></i>маркетинговая аналитика</a></li>
+<li><a href="c1_intro.html#section" id="toc-section"></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#продуктовая-аналитика"><i class="fa fa-check"></i>Продуктовая аналитика</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#что-такое-продукт"><i class="fa fa-check"></i>что такое продукт</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#cxux-исследователи"><i class="fa fa-check"></i>CX/UX-исследователи</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#структура-команды-разработки"><i class="fa fa-check"></i>структура команды разработки</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#роли-продуктовых-аналитиков"><i class="fa fa-check"></i>роли продуктовых аналитиков</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#стадии-развития-продукта"><i class="fa fa-check"></i>Стадии развития продукта</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#этапы-жизни"><i class="fa fa-check"></i>этапы жизни</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#технические-этапы"><i class="fa fa-check"></i>технические этапы</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#бизнес-модели"><i class="fa fa-check"></i>Бизнес-модели</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#компоненты"><i class="fa fa-check"></i>компоненты</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#варианты"><i class="fa fa-check"></i>варианты</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#полезные-материалы"><i class="fa fa-check"></i>Полезные материалы</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#домашнее-задание"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#для-тех-кто-не-был-на-прошлом-курсе"><i class="fa fa-check"></i>Для тех, кто не был на прошлом курсе</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Методы анализа больших данных</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Методы анализа больших данных</h1>
+<h2 class="subtitle"><em>в исследованиях поведения покупателей</em></h2>
+<p class="author"><em>Ph.A.Upravitelev</em></p>
+<p class="date"><em>2023-09-08</em></p>
+</div>
+<div id="intro" class="section level1 hasAnchor">
+<h1>Intro<a href="index.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<!-- September 11: [О курсе + задачи продуктовых аналитиков](#c1_intro) -->
+<!-- September 18: [Метрики вовлечения и удержания](#c2_engagement) -->
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="c1_intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "static"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
