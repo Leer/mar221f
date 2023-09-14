@@ -5,7 +5,7 @@ new_session: yes
 rmd_files: [
   'index.Rmd',
   '1_intro.Rmd',
-  # '2_engagement.Rmd',
+  '2_engagement.Rmd',
   # '3_engagement.Rmd',
   # '4_monetization.Rmd',
   # '5_monetization.Rmd',
