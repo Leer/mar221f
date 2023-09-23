@@ -1,0 +1,338 @@
+# Метрики вовлечения pt2 {-}
+
+## Запись занятия
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cUz4tPkNh8o?si=L7ddhpMItnVLp9Rv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+### level 2 (HNTR) {-}
+
+Необходимо подсчитать и нарисовать, сколько пользователей в день приходит в приложение, в том числе и с разбивкой по платформам. Датасет: <https://gitlab.com/hse_mar/mar211f/-/raw/main/data/installs.csv>
+
+Решение:
+```{r, message=FALSE, warning=FALSE}
+# подключаем пакеты (они до этого должны быть установлены)
+library(data.table)
+library(plotly)
+
+# если есть ошибка с %>%, то явно подключаем соответствующий пакет
+library(magrittr)
+
+# импортируем данные
+installs <- fread('https://gitlab.com/hse_mar/mar211f/-/raw/main/data/installs.csv')
+
+# считаем количество уникальных пользователей по дням
+intalls_stat <- installs[, list(n_users = uniqueN(user_pseudo_id)), 
+                         by = list(dt, media_source)]
+
+# сортируем по дате инсталла
+intalls_stat <- intalls_stat[order(dt)]
+
+# рисуем график
+plot_ly(intalls_stat, x = ~dt, y = ~n_users, color = ~media_source,
+        type = 'scatter', mode = 'none', stackgroup = 'one') %>%
+  layout(
+    title = 'Установки приложения по дням',
+    xaxis = list(title = ''),
+    yaxis = list(title = '', rangemode = 'tozero')) %>%  
+  config(displayModeBar = FALSE)
+
+```
+
+
+### level 4 (UV) {-}
+На основе данных по [логинам](https://gitlab.com/hse_mar/mar211f/-/raw/main/data/dau.csv) нарисуйте [area plot](https://en.wikipedia.org/wiki/Area_chart) DAU проекта, в котором цветами выделите группы пользователей по количеству дней с момента инсталла:
+
+-   группа 1: 0 дней с инсталла
+
+-   группа 2: 1-7 дней с момента инсталла
+
+-   группа 3: 8-28 дней с инсталла
+
+-   группа 4: более 28 дней с инсталла
+
+У вас должно получится что-то вроде слоеного пирога, где цветами выделены группы. Подумайте, есть ли необходимость рисовать этот график не в абсолютных числах (количество пользователей), а в долях каждой группы от DAU, в чем могут быть плюсы и минусы такого графика. Возможно, вам потребуется нарисовать графики разных типов, чтобы ответить на этот вопрос.
+
+Попробуйте подумать, что говорит подобный график о продукте и его пользователях. Есть ли у него проблемные зоны, над которыми надо поработать или которые могут влиять на стратегию развития и/или оперирования продукта?
+
+
+Решение:
+```{r}
+# импортируем даатсает
+dau <- fread('https://gitlab.com/hse_mar/mar211f/-/raw/main/data/dau.csv')
+
+# считаем количество дней от инсталла
+dau[, lifetime := login_dt - install_dt]
+
+# делим на группы
+dau[, lifetime_group := cut(lifetime, 
+                            breaks = c(-Inf, -1, 0, 7, 28, Inf), 
+                            ordered_result = TRUE)]
+
+# если хотим перезадать порядок уровней
+# dau[, lifetime_group_ := factor(lifetime_group, 
+#                                levels = c('(-1,0]', 
+#                                           '(28, Inf]', '(0,7]', 
+#                                           '(7,28]', '(-Inf,-1]'))]
+
+
+# второй стобоб разметить группы
+# dau[lifetime == 0, lifetime_group_3 := '0. 0 day']
+# dau[lifetime >= 1 & lifetime <= 7, lifetime_group_3 := '1. 1-7 days']
+# dau[lifetime >= 8 & lifetime <= 28, lifetime_group_3 := '2. 8-28 days']
+# dau[lifetime >= 28 & lifetime <= 90, lifetime_group_3 := '3. 28+ days']
+
+# создаем отдельную группу для тех, про кого мы не знаем
+# dau[is.na(lifetime_group), lifetime_group_3 := 'unknown']
+
+# третий метод, с помощью fcase
+# dau[, lifetime_group := fcase(
+#   lifetime == 0, '0 дней',
+#   lifetime >= 1 & lifetime <= 7, '1-7 дней'
+# )]
+
+# считаем DAU
+dau_stat <- dau[, list(n_users = uniqueN(user_pseudo_id)),
+                keyby = list(login_dt, lifetime_group)]
+
+dau_stat[, total_users := sum(n_users), by = login_dt]
+dau_stat[, share := n_users / total_users]
+
+
+# area-plot
+plot_ly(dau_stat, x = ~login_dt, y = ~n_users, color = ~lifetime_group,
+        type = 'scatter', mode = 'none', stackgroup = 'one') %>%
+  layout(
+    title = 'DAU по группам пользователей',
+    xaxis = list(title = ''),
+    yaxis = list(title = '', rangemode = 'tozero')) %>%  
+  config(displayModeBar = FALSE)
+
+# график линиями
+plot_ly(dau_stat, x = ~login_dt, y = ~n_users, color = ~lifetime_group,
+        type = 'scatter', mode = 'lines') %>%
+  layout(
+    title = 'DAU по группам пользователей',
+    xaxis = list(title = ''),
+    yaxis = list(title = '', rangemode = 'tozero')) %>%
+  config(displayModeBar = FALSE)
+```
+
+
+### level 5 (N) {-}
+
+Постройте графики DAU, MAU и их отношения для данных за июль. Проинтерпретируйте метрику DAU/MAU, что она говорит о проекте?
+
+Решение. Строим график MAU.
+```{r, message=FALSE, warning=FALSE}
+# берем интересующие нас дни
+dates <- dau[login_dt >= '2022-07-01', sort(unique(login_dt))]
+
+# проходим циклом lapply
+mau_stat <- lapply(dates[1:2], function(x) {
+  # берем данные в интервале "наша дата - 30 дней -- наша дата"
+  result <- dau[login_dt >= x - 30 & login_dt <= x]
+  # считаем, сколько пользователей заходило за это время (mau)
+  result <- result[, list(dt = x, dt_lb = x - 30, mau = uniqueN(user_pseudo_id))]
+  result
+})
+# собираем все в табличку
+mau_stat <- rbindlist(mau_stat)
+
+# аналогичное решение, более современное по функциям
+# + считаем одновременно dau и mau
+library(purrr)
+mau_stat <- map_df(dates, function(x) {
+  result <- dau[, list(
+    dt = x,
+    dt_lb = x - 30, 
+    metric_dau = uniqueN(user_pseudo_id[login_dt == x]),
+    metric_mau = uniqueN(user_pseudo_id[login_dt >= x - 30 & login_dt <= x])
+  )]
+  result
+})
+
+setDT(mau_stat)
+
+# считаем stickiness
+mau_stat[, stickiness := metric_dau / metric_mau]
+
+# рисуем DAU и MAU
+plot_ly(mau_stat, x = ~dt, y = ~metric_mau, 
+        type = 'scatter', mode = 'lines', name = 'MAU') %>%
+  add_trace(y = ~metric_dau, name = 'DAU') %>%
+  layout(
+    title = 'DAU и MAU',
+    yaxis = list(rangemode = 'tozero')
+  ) %>%
+  config(displayModeBar = FALSE)
+
+
+# рисуем stickiness
+plot_ly(mau_stat, x = ~dt, y = ~stickiness, type = 'scatter', mode = 'lines') %>%
+  layout(
+    title = 'DAU / MAU',
+    yaxis = list(rangemode = 'tozero')
+  ) %>%
+  config(displayModeBar = FALSE)
+```
+
+## Расчет retention
+
+Общая логика расчета:
+- считаем lifetime
+- считаем количество пользователей на каждый день от инсталла 
+- считаем долю этих пользователей от всего пользователей когорты
+- ограничиваем на общий доступный лайфтайм
+- рисуем график
+- опционально -- добавляем группировку
+
+
+```{r, message=FALSE, warning=FALSE}
+# берем только тех, кто пришел в июне
+retention <- dau[install_dt >= '2022-06-01']
+retention <- retention[install_dt < '2022-07-01']
+
+
+
+# ограничиваем на минимальное общее количество дней
+retention <- retention[lifetime <= 30 & lifetime >= 0]
+
+# считаем количество вернувшихся
+retention_stat <- retention[, list(returned = uniqueN(user_pseudo_id)),
+                            keyby = list(platform, lifetime)]
+
+# считаем,с колько всего было
+retention_stat[, total_users := returned[lifetime == 0], by = platform]
+
+# второй вариант расчета total_users, через merge
+retention_stat <- merge(
+  retention_stat,
+  retention_stat[lifetime == 0, list(platform, total_users_2 = returned)],
+  by = 'platform', all.x = TRUE
+)
+
+# считаем retention
+retention_stat[, ret := returned / total_users]
+
+
+# рисуем график
+plot_ly(retention_stat, x = ~lifetime, y = ~ret, color = ~platform,
+        type = 'scatter', mode = 'lines') %>%
+  layout(
+    title = 'Retention rate',
+    yaxis = list(rangemode = 'tozero')
+  ) %>%
+  config(displayModeBar = FALSE)
+
+```
+
+
+
+<!-- ## level 4 (UV) -->
+
+<!-- Постройте и сравните графики rolling retention и retention rate для тех пользователей, которые пришли в июле и августе. -->
+
+<!-- ```{r} -->
+<!-- # чистим пользователей, у которых дата логина раньше даты инсталла -->
+<!-- bug_users <- dau[login_dt < install_dt, unique(user_pseudo_id)] -->
+
+<!-- # корректируем таблицу dau -->
+<!-- dau <- dau[!(user_pseudo_id %in% bug_users)] -->
+
+<!-- # считаем retention rate (классический, когда имеем возможность логировать каждый заход пользователя) -->
+<!-- rrate_stat <- dau[, list(n_users = uniqueN(user_pseudo_id)), by = lifetime] -->
+<!-- rrate_stat <- rrolling_stat[lifetime <= 28] -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- # считаем rolling retention -->
+<!-- # сначала вычисляем максимальную дату захода по каждому пользователю -->
+<!-- rrolling <- dau[, list(last_login = max(login_dt)), by = list(user_pseudo_id, install_dt)] -->
+<!-- rrolling[, lifetime := as.numeric(last_login - install_dt)] -->
+
+<!-- # считаем количество дней от инсталла до последнего логина -->
+<!-- rrolling_stat <- rrolling[, list(n_users = uniqueN(user_pseudo_id)), keyby = lifetime] -->
+
+<!-- # нужна обратная кумулята, так как мы считаем "сколько пришло после дня x" -->
+<!-- # а в статистике у нас "сколько пришло в день x" - то есть, для каждого дня надо получить, -->
+<!-- # накопительную сумму этого и всех следующих дней. а это делается с помощью обратной кумуляты -->
+<!-- # для этого мы переворачиваем значения колонки с помощью rev(), считаем обычную кумуляту -->
+<!-- # а потом результат переворачиваем обратно -->
+<!-- # чтобы понять результат, попробуйте выражения: 1:5; rev(1:5), cumsum(1:5), cumsum(rev(1:5)), rev(cumsum(rev(1:5))) -->
+<!-- rrolling_stat[, n_users_cum := rev(cumsum(rev(n_users)))] -->
+<!-- rrolling_stat <- rrolling_stat[lifetime <= 28] -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- # собираем обе таблицы ретеншена и рисуем -->
+<!-- rr <- merge( -->
+<!--   rrate_stat[, list(lifetime, rate = n_users / n_users[lifetime == 0])], -->
+<!--   rrolling_stat[, list(lifetime, rolling = n_users_cum / n_users_cum[lifetime == 0])], -->
+<!--   by = 'lifetime', -->
+<!--   all.x = TRUE -->
+<!-- ) -->
+<!-- plot_ly(rr, x = ~lifetime, y = ~rate, type = 'scatter', mode = 'lines', name = 'Retention rate') %>% -->
+<!--   add_trace(y = ~rolling, name = 'Rolling retention') -->
+<!-- ``` -->
+
+
+<!-- ## level 5 (N) -->
+
+<!-- Постройте графики DAU, MAU и их отношения. Проинтерпретируйте метрику DAU/MAU, что она говорит о проекте? -->
+
+<!-- ```{r, message=FALSE, warning=FALSE} -->
+<!-- # считаем DAU -->
+<!-- auth_stat <- auth[, list(dau = uniqueN(user_id)), by = login_date] -->
+
+<!-- # считаем MAU -->
+<!-- auth_stat[, mau := sapply(login_date, function(x) -->
+<!--   auth[login_date %between% c(x - 30, x), uniqueN(user_id)])] -->
+
+<!-- # сортируем -->
+<!-- auth_stat <- auth_stat[order(login_date)] -->
+
+<!-- # рисуем график -->
+<!-- plot_ly(auth_stat, x = ~login_date, y = ~dau, -->
+<!--         type = 'scatter', mode = 'lines', name = 'DAU') %>% -->
+<!--   add_trace(y = ~mau, name = 'MAU') %>% -->
+<!--   layout(title = 'DAU и MAU проекта', -->
+<!--          yaxis = list(rangemode = 'tozero')) -->
+<!-- ``` -->
+
+
+## Домашнее задание
+
+### level 1 (IATYTD)
+
+Внимательно разберите решения заданий (материалы конспекта).
+
+
+### level 2 (HNTR)
+Постройте график ретеншена для когорты пользователей, пришедшей в июне, с разбивкой по источникам привлечения (media_source). Для этого вам потребуются следующие датасеты:
+
+- Инсталлы: https://gitlab.com/hse_mar/mar211f/-/raw/main/data/installs.csv
+- Логины: https://gitlab.com/hse_mar/mar211f/-/raw/main/data/dau.csv
+
+### level 3 (HMP)
+Постройте линейный график retention 1 day (ret1) для всех дневных когорт.
+Т.е. по оси OX должна быть дата инсталла, по оси OY -- значение ретеншена первого для пользователей, пришедших в этот день.
+
+### level 4 (UV)
+Добавьте на этот график группировку по источникам трафика (media_source).
+
+
+### level 5 (N)
+
+Постройте и сравните графики rolling retention и retention rate (возьмите данные за логины и инсталлы из практикума).
+
+Для rolling retention необходимо:
+
+- посчитать максимальный лайфтайм пользователя
+- gосчитать количество пользователей по лайфтайму
+- cделать обратную кумулятивную сумму
+- cумму поделить на количество установок (для lifetime == 0 значения количества инсталлов и обратная кумсумма должны совпадать)
+
+
+
