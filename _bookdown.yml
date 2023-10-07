@@ -8,7 +8,7 @@ rmd_files: [
   '2_engagement.Rmd',
   '3_engagement.Rmd',
   '4_monetization.Rmd',
-  # '5_monetization.Rmd',
+  '5_monetization.Rmd',
   # '6_funnels.Rmd',
   # '6_ux.Rmd',
   # 'hw_1.Rmd',

@@ -1,0 +1,221 @@
+# Метрики монетизации pt.2 {#c5_monetization}
+
+## Запись занятия {-}
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/2DjR09pvky0?si=w4Cj2J9gj436byIz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+
+## Разбор домашнего задания
+
+### level 2 (HNTR)
+
+Постройте график накопительной конверсии с разбивкой по источнику пользователей.
+
+
+```{r, warning=FALSE, message=FALSE}
+library(data.table)
+library(plotly)
+
+# импортируем данные
+installs <- fread('https://gitlab.com/hse_mar/mar211f/-/raw/main/data/installs.csv') 
+payments <- fread('https://gitlab.com/hse_mar/mar211f/-/raw/main/data/payments_custom.csv')
+
+# перекодируем медиасорсы
+installs[is.na(media_source), media_source := 'organic']
+installs[media_source == 'other', media_source := 'organic']
+
+# выбираем первый инсталл
+installs <- installs[order(user_pseudo_id, dt)]
+installs <- installs[, .SD[1], by = user_pseudo_id]
+
+# берем платежи только новых пользователей
+payments_new <- payments[user_pseudo_id %in% installs[, unique(user_pseudo_id)]]
+
+# прикрепляем к ним медиасорсы
+payments_new <- merge(
+  payments_new,
+  installs[, list(user_pseudo_id, dt, media_source)],
+  by = 'user_pseudo_id', all.x = TRUE
+)
+
+# payments_new <- merge(
+#   payments_new,
+#   installs[, list(user_pseudo_id, dt, media_source)],
+#   by = 'user_pseudo_id', all = FALSE
+# )
+
+# вычисляем лайфтайм
+payments_new[, lifetime := pay_dt - dt]
+
+# корректируем на окно лайфтайма
+# as.Date('2022-07-31') - as.Date('2022-06-30')
+payments_new <- payments_new[dt < '2022-07-01']
+payments_new <- payments_new[lifetime <= 30]
+payments_new <- payments_new[lifetime >= 0]
+
+
+# считаем, когда пользователь сделал первый платеж (минимальный лайфтайм)
+payments_new_stat <- payments_new[, list(lifetime = min(lifetime)), 
+                                  by = list(user_pseudo_id, media_source)]
+
+# считаем распределение пользователей по этому мин.лайфтайму
+payments_new_stat <- payments_new_stat[, list(new_payer = uniqueN(user_pseudo_id)), 
+                                       by = list(media_source, lifetime)]
+
+# сортируем и делаем кумулятивную сумму
+payments_new_stat <- payments_new_stat[order(media_source, lifetime)]
+payments_new_stat[, new_payer_cum := cumsum(new_payer), by = media_source]
+
+# считаем, сколько всего пользователей пришло
+installs_stat <- installs[, list(total_users = uniqueN(user_pseudo_id)), by = media_source]
+
+payments_new_stat <- merge(
+  payments_new_stat,
+  installs_stat,
+  by = 'media_source', all.x = TRUE
+)
+payments_new_stat[, conversion := new_payer_cum / total_users]
+
+# рисуем
+plot_ly(payments_new_stat, x = ~lifetime, y = ~conversion, color = ~media_source,
+        type = 'scatter', mode = 'lines') %>%
+  layout(
+    title = 'накопительная конверсия по источникам трафика',
+    yaxis = list(rangemode = 'tozero')
+  ) %>%
+  config(displayModeBar = FALSE)  
+
+```
+
+### level 3 (HMP)
+
+Посчитайте по каждой платформе конверсию в платящих в день инсталла. Когорта -- пришедшие в июне.
+
+Делать аналогично динамике ретеншена первого дня.
+```{r}
+# аналогично предыдущему заданию
+# пересобираем датасет, так как в прошлом задании мы в нем делали другие вычисления
+# и он нужен заново
+payments_new <- payments[user_pseudo_id %in% installs[, unique(user_pseudo_id)]]
+
+payments_new <- merge(
+  payments_new,
+  installs[, list(user_pseudo_id, dt, media_source)],
+  by = 'user_pseudo_id', all.x = TRUE
+)
+payments_new[, lifetime := pay_dt - dt]
+
+payments_new <- payments_new[dt < '2022-07-25']
+payments_new <- payments_new[lifetime <= 7]
+payments_new <- payments_new[lifetime >= 0]
+
+# отличие от предыдущего задания -- делаем группировку не по медиасорсам, а по дате инсталла
+payments_new_stat <- payments_new[, list(lifetime = min(lifetime)), 
+                                  by = list(user_pseudo_id, dt)]
+payments_new_stat <- payments_new_stat[, list(new_payer = uniqueN(user_pseudo_id)), 
+                                       by = list(dt, lifetime)]
+
+installs_stat <- installs[, list(total_users = uniqueN(user_pseudo_id)), by = dt]
+
+payments_new_stat <- merge(
+  payments_new_stat,
+  installs_stat,
+  by = 'dt', all.x = TRUE
+)
+
+payments_new_stat <- payments_new_stat[order(dt, lifetime)]
+payments_new_stat[, new_payer_cum := cumsum(new_payer), by = dt]
+payments_new_stat[, conversion := new_payer_cum / total_users]
+
+# оставляем только накопительную конверсию в платящих на определенные дни от инсталла
+payments_new_stat <- payments_new_stat[lifetime %in% c(0, 1, 3, 7)]
+
+plot_ly(payments_new_stat[dt < '2022-07-01'], 
+        x = ~dt, y = ~conversion, color = ~as.character(lifetime),
+        type = 'scatter', mode = 'lines') %>%
+  layout(
+    title = 'Динамика конверсии пользователей по дням',
+    yaxis = list(rangemode = 'tozero')
+  ) %>%
+  config(displayModeBar = FALSE)  
+
+```
+
+
+
+## Воронка платежей
+
+Доля пользователей, которые сделали второй, третий и т.д. платеж.
+
+
+```{r}
+# опять пересобираем исходную табличку платежей
+payments_new <- payments[user_pseudo_id %in% installs[, unique(user_pseudo_id)]]
+
+payments_new <- merge(
+  payments_new,
+  installs[, list(user_pseudo_id, dt, media_source)],
+  by = 'user_pseudo_id', all.x = TRUE
+)
+
+# отсортировать платежи пользователей по возрастанию 
+payments_new <- payments_new[order(user_pseudo_id, ts)]
+
+# альтернативные методы сортировки
+# setkey(payments_new, user_pseudo_id, ts)
+# setorder(payments_new, user_pseudo_id, ts)
+
+# создаем номер платежа каждого пользователя. 1:.N -- и так в группе по пользователям
+payments_new[, purchase_number := 1:.N, by = user_pseudo_id]
+# payments_new[, purchase_number := seq(1, .N, by = 1), by = user_pseudo_id]
+
+payments_new[, lifetime := pay_dt - dt]
+payments_new <- payments_new[dt < '2022-07-01']
+payments_new <- payments_new[lifetime <= 30]
+payments_new <- payments_new[lifetime >= 0]
+
+# считаем, сколько пользователей сделало платеж с этим номером
+payments_funnel <- payments_new[, list(n_users = uniqueN(user_pseudo_id)), keyby = purchase_number]
+
+# считаем посчитать долю от всего пользователей, сделавших платеж (purchase_number == 1)
+payments_funnel[, total_payers := n_users[purchase_number == 1]]
+
+# если у нас есть группировка, то надо отдельно считать и мерджить по ключу
+
+# рисуем
+payments_funnel[, share := n_users / total_payers]
+
+plot_ly(payments_funnel[purchase_number <= 10], 
+        x = ~purchase_number, y = ~share, type = 'bar') %>%
+  layout(
+    title = 'Воронка платежей'
+  ) %>%
+  config(displayModeBar = FALSE)  
+
+```
+
+
+Воронки можно считать не от первого шага, а от предыдущего. В некоторых случаях это удобнее и информативнее.
+```{r}
+
+# если хотим считать от предыдущего шага
+payments_funnel[, prev_users := shift(n_users, n = 1)]
+payments_funnel[, prev_share := n_users / prev_users]
+
+plot_ly(payments_funnel[purchase_number <= 10], 
+        x = ~purchase_number, y = ~prev_share, type = 'bar') %>%
+  layout(
+    title = 'Воронка платежей, доля от предыдущего'
+  ) %>%
+  config(displayModeBar = FALSE)  
+
+
+plot_ly(payments_funnel[purchase_number <= 10], 
+        x = ~purchase_number, y = ~share, type = 'bar', name = '% from payers') %>%
+  add_trace(y = ~prev_share, name = '% from prev') %>%
+  layout(
+    title = 'Воронка платежей'
+  ) %>%
+  config(displayModeBar = FALSE)  
+```
+
