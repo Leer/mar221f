@@ -1,0 +1,153 @@
+# Метрики монетизации pt.3 {-}
+
+## Запись занятия {-}
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_AeWA3nmHrI?si=kaA90fsn1qbHyFxN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+
+## ARPU / ARPPU {-}
+Averange revenue per user - сумма платежей за определенный период, деленная на общее количество пользователей когорты. Средний чек, наверное, одна из самых важных метрик для оперирования продуктом, так как изучение структуры ARPU позволяет понять, за что платят пользователи и как можно улучшить эту метрику и так далее.
+
+Average revenue per paying user - сумма платежей за определенный период, деленная на количество платящих пользователей когорты.
+
+Обе метрики считаются в определенном окне (количестве дней от инсталла) - обычно 7, 28 или 30 дней. Это необходимо для того, чтобы учесть ситуацию, когда пользователи одной когорты (месячной, например) могли прожить разное количество дней в приложении. Или когда необходимо сравнить разные каналы привлечения, рекламные кампании или группы аб-тестов.
+
+### задача 1 {-}
+Считаем статистики в окне 7 дней от инсталла:
+
+```{r, message=FALSE, warning=FALSE}
+library(data.table)
+library(plotly)
+library(kableExtra)
+
+# импортируем данные
+installs <- fread('https://gitlab.com/hse_mar/mar211f/-/raw/main/data/installs.csv') 
+payments <- fread('https://gitlab.com/hse_mar/mar211f/-/raw/main/data/payments_custom.csv')
+
+# перекодируем медиасорсы
+installs[is.na(media_source), media_source := 'organic']
+installs[media_source == 'other', media_source := 'organic']
+
+# выбираем первый инсталл
+installs <- installs[order(user_pseudo_id, dt)]
+installs <- installs[, .SD[1], by = user_pseudo_id]
+
+# берем платежи только новых пользователей
+payments_new <- payments[user_pseudo_id %in% installs[, unique(user_pseudo_id)]]
+
+# прикрепляем к ним медиасорсы
+payments_new <- merge(
+  payments_new,
+  installs[, list(user_pseudo_id, dt, media_source)],
+  by = 'user_pseudo_id', all.x = TRUE
+)
+
+# вычисляем лайфтайм
+payments_new[, lifetime := pay_dt - dt]
+
+# корректируем на окно лайфтайма
+payments_new <- payments_new[dt < '2022-07-01']
+payments_new <- payments_new[lifetime < 7]
+
+# отсюда надо считать количество денег и платящих
+# по сути, просто группировка по медиасорсу
+
+payments_new_stat <- payments_new[, list(
+  payers_7 = uniqueN(user_pseudo_id),
+  gross_7 = sum(gross),
+  n_purchases = .N
+), by = media_source]
+
+
+# считаем, сколько всего пользователей пришло
+installs_stat <- installs[, list(total_users = uniqueN(user_pseudo_id)), 
+                          by = media_source]
+
+payments_new_stat <- merge(
+  installs_stat,
+  payments_new_stat,
+  by = 'media_source', all.x = TRUE
+)
+
+payments_new_stat[, ARPU_7 := round(gross_7 / total_users, 2)]
+payments_new_stat[, ARPPU_7 := round(gross_7 / payers_7, 2)]
+payments_new_stat[, conv_7 := round(payers_7 / total_users, 3)]
+payments_new_stat[, avg_purchase := round(gross_7 / n_purchases, 1)]
+payments_new_stat[, purchases_per_user := round(n_purchases / payers_7, 1)]
+
+payments_new_stat
+# kable_classic(kbl(payments_new_stat))
+# kable_material(kbl(payments_new_stat))
+```
+
+<br>
+
+## LTV {-}
+Lifetime value - общая сумма платежей, которые сделает пользователь за всю свою жизнь в приложении. Так как для каждого пользователя обычно сложно предсказать, сколько он проживет, то считается как кумулятивный средний чек когорты - общая накопленная сумма платежей, сделанная к определенному дню от инсталла, деленная на количество пользователей когорты. Кривая LTV/cumARPU сходится к общему значению ARPU по всей выборке за все время жизни когорты. 
+
+LTV, фактически, одна из ключевых метрик, так как график LTV/cumARPU позволяет оценить динамику платежей когорты, сделать какие-то предсказания. Отношение LTV и CPI позволяют оценить эффективность рекламных кампаний. Например, за 90 дней от инсталла платежами пользователей возвращается 40-60% затраченных на привлечение денег. На 270-360 - все затраченные, и дальнейшие платежи составляют чистую прибыль (абстрактный пример, в реальности периоды сильно зависят от продукта). Соответственно, если даже в перспективе значение LTV когорты (сколько заплатит каждый привлеченный пользователь) не превысит CPI (сколько стоило привлечение каждого пользователя) когорты, то такая рекламная кампания убыточна и может быть полезна только для увеличение объема пользователей.
+
+### задача 2 {-}
+Посчитать кумулятивное ARPU  30  дня по июньской когорте
+
+Алгоритм
+ - посчитать сумму гросса по дням лайфтайма
+ - посчитать кумулятивную сумму этого гросса c помощью `cumsum()`
+ - поделить кумулятивную сумму на общее количество пользователей когорты
+ - нарисовать график
+ 
+```{r}
+# пересоздаем датасет, так как раньше отрезали только 7 дней
+# берем платежи только новых пользователей
+payments_new <- payments[user_pseudo_id %in% installs[, unique(user_pseudo_id)]]
+
+# прикрепляем к ним медиасорсы
+payments_new <- merge(
+  payments_new,
+  installs[, list(user_pseudo_id, dt, media_source)],
+  by = 'user_pseudo_id', all.x = TRUE
+)
+
+# вычисляем лайфтайм
+payments_new[, lifetime := pay_dt - dt]
+
+# корректируем на окно лайфтайма
+payments_new <- payments_new[dt < '2022-07-01']
+payments_new <- payments_new[lifetime <= 30]
+payments_new <- payments_new[lifetime >= 0]
+
+
+# считаем платежи
+payments_new_stat <- payments_new[, list(gross = sum(gross)), 
+                                  by = list(media_source, lifetime)]
+
+# сортируем и делаем кумулятивную сумму
+payments_new_stat <- payments_new_stat[order(media_source, lifetime)]
+payments_new_stat[, gross_cum := cumsum(gross), by = media_source]
+
+# считаем, сколько всего пользователей пришло
+installs_stat <- installs[, list(total_users = uniqueN(user_pseudo_id)), by = media_source]
+
+payments_new_stat <- merge(
+  payments_new_stat,
+  installs_stat,
+  by = 'media_source', all.x = TRUE
+)
+payments_new_stat[, cumARPU := gross_cum / total_users]
+
+# рисуем
+plot_ly(payments_new_stat, x = ~lifetime, y = ~cumARPU, color = ~media_source,
+        type = 'scatter', mode = 'lines') %>%
+  layout(
+    title = 'cARPU по источникам трафика',
+    yaxis = list(rangemode = 'tozero')
+  ) %>%
+  config(displayModeBar = FALSE)  
+```
+ 
+ 
+## Полезные материалы {-}
+
+[What Is a Business Model? 30 Successful Types of Business Models You Need to Know](https://fourweekmba.com/what-is-a-business-model/) Коротко, что такое бизнес-модели, рассматриваются 30 разных моделей. Полезно для понимания, как вообще могут зарабатывать разные продукты.
+
+[Основные метрики мобильных приложений](https://apptractor.ru/measure/user-analytics/osnovnyie-metriki-mobilnyih-prilozheniy.html) Очень обзорный материал от devtodev. Есть неплохой блок по метрикам монетизации.
