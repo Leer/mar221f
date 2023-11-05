@@ -28,7 +28,7 @@
 
 ## Описание данных
 
-- [users.csv](https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/payments.csv) - инсталлы пользователей, с указанием даты инсталла, канала привлечения пользователя, стоимости привлечения (CPI) и версии приложения.
+- [users.csv](https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/users.csv) - инсталлы пользователей, с указанием даты инсталла, канала привлечения пользователя, стоимости привлечения (CPI) и версии приложения.
 
 - [auth.csv](https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/auth.csv) - даты авторизаций пользователей (в какие даты пользователи заходили в приложение).
 
