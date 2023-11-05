@@ -1,0 +1,287 @@
+# Homework 1
+
+## Общие замечания
+
+- Срок сдачи работы: 26 ноября 2023 включительно.
+
+- Домашнее задание лучше выполнять в R или R + Rmarkdown. 
+
+- Если R и Rmarkdown у вас вызывают сомнения, можете прислать решение в виде R скрипта, где комментарии по работе должны быть в виде строк комментариев. 
+
+- Если вы работаете в Python - аналогично, меня устроит и `.ipynb`, и `.py`. Если ни R, ни Python у вас не вызывают энтузиазма, и вы хотите как-то по-другому выполнять работу, напишите мне дополнительно.
+
+- Свой файл с кодом решения назовите по структуре `mar221_hw1_<ваша фамилия латиницей>` и пришлите либо в личных сообщениях в slack, либо на почту upravitelev@gmail.com, в теме также укажите `mar221_hw1_<ваша фамилия латиницей>`.
+
+- Старайтесь комментировать каждую значимую строчку кода (т. е., в которой происходит сложное или не очень прозрачное преобразование). Комментарии нужны, впервую очередь, для того, чтобы вы могли продемонстрировать, что понимаете, что и зачем делаете. Если некоторые операции однозначны и очевидны, комментарии можно опустить.
+
+- Соблюдайте [гайд](http://adv-r.had.co.nz/Style.html) по стилю оформления кода и/или используйте автоформатирование RStudio (ctr+shift+A на выделенном коде для Win/*nix). Отсутствие комментариев, неопрятность и/или нечитаемость кода, несоблюдение конвенций гайда по стилю - на все это я буду обращать внимание и, в случае существенных помарок, снижать оценку.
+
+- Выполняйте задание самостоятельно. Если у меня возникнут затруднения в объективной оценке, то договоримся о созвоне и я попрошу прокомментировать то или иное решение, или же дам небольшое задание из аналогичных, чтобы сравнить стиль решения и рассуждений.
+
+- Если при выполнении задания все же возникнут какие-то вопросы - можете спросить меня (все вопросы в слаке - либо в личке, либо в канале #random). Не гарантирую, что отвечу максимально подробно, но дать минимальную подсказку или прояснить неясность задания постараюсь. 
+
+- Имейте в виду, что данные сгенерированы (то есть, ненастоящие), поэтому в них могут быть артефакты или странности.
+
+- тем, кто был на занятии по sql, настоятельно рекомендую джойны и фильтрации делать средствами SQL.
+
+<br>
+
+## Описание данных
+
+- [users.csv](https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/payments.csv) - инсталлы пользователей, с указанием даты инсталла, канала привлечения пользователя, стоимости привлечения (CPI) и версии приложения.
+
+- [auth.csv](https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/auth.csv) - даты авторизаций пользователей (в какие даты пользователи заходили в приложение).
+
+- [onboarding.csv](https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/onboarding.csv) - логи прохождение пользователями ключевых этапов от первого старта приложения до первой покупки (нередко этот этап или его часть называют онбордингом).
+
+- [payments.csv](https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/payments.csv) - логи платежей пользователей, содержат дату и размер платежа.
+
+<!-- Также все данные находятся в PostgreSQL-базе данных, в схеме `hw1`. Параметры подключения такие же, как и [ранее](7_sql_intro.html) -->
+
+**NB!** Считайте, что последний день, когда пользователи могли заходить в приложение - 21 ноября.
+
+```{r, include=FALSE, eval=FALSE}
+library(data.table)
+users <- fread('./data/hw_1/users.csv')
+# setnames(users, c('channel', 'install_dt'), c('media_source', 'dt'))
+
+# users[, dt := dt + 365]
+
+# fwrite(users, './data/hw_1/users.csv', row.names = FALSE)
+# dbSendQuery(con, 'drop table hw1.users')
+# dbWriteTable(con, c('hw1', 'users'), users, row.names = FALSE)
+
+auth <- fread('./data/hw_1/auth.csv')
+# auth[, login_dt := login_dt + 365]
+# fwrite(auth, './data/hw_1/auth.csv', row.names = FALSE)
+# dbSendQuery(con, 'drop table hw1.auth')
+# dbWriteTable(con, c('hw1', 'auth'), auth, row.names = FALSE)
+
+payments <- fread('./data/hw_1/payments.csv')
+# payments[, pay_dt := pay_dt + 365]
+# payments <- payments[pay_dt < '2022-11-01']
+# fwrite(payments, './data/hw_1/payments.csv', row.names = FALSE)
+# dbSendQuery(con, 'drop table hw1.payments')
+# dbWriteTable(con, c('hw1', 'payments'), payments, row.names = FALSE)
+```
+
+<br>
+
+## Задание 1
+Нарисуйте и проинтерпретируйте график удержания пользователей в приложении, с учетом канала привлечения пользователей. Попробуйте объяснить / предположить причины такой динамики метрики удержания в первые три дня (lifetime в интервале 0-2) по каналам. Рекомендация: на барчарте или в таблице видно лучше, чем на линейном графике. Напишите, каким образом можно было бы проверить вашу гипотезу.
+
+
+```{r, include=FALSE}
+library(data.table)
+library(plotly)
+
+# импортируем данные и конвертируем даты
+users <- fread('https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/users.csv')
+# users[, dt := as.Date(install_dt)]
+
+auth <- fread('https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/auth.csv')
+# auth[, login_dt := as.Date(login_dt)]
+```
+  
+```{r, include=FALSE}
+# считаем lifetime
+retention <- merge(auth, users[, list(user_id, media_source, dt)], by = 'user_id', all.x = TRUE)
+retention[, lifetime := login_dt - dt]
+
+# считаем удержание
+retention_stat <- retention[, list(n_users = uniqueN(user_id)), by = list(media_source, lifetime)]
+retention_stat <- retention_stat[order(media_source, lifetime)]
+retention_stat[, total_users := n_users[lifetime == 0], by = media_source]
+retention_stat[, share := n_users / total_users]
+
+# у нас есть только 21 день для всех когорт
+retention_stat <- retention_stat[lifetime <= 21]
+plot_ly(retention_stat, x = ~lifetime, y = ~share, color = ~media_source,
+        type = 'scatter', mode = 'lines') %>%
+  layout(title = 'Удержание пользователей в зависимости от канала привлечения',
+         yaxis = list(rangemode = 'tozero'))
+
+plot_ly(retention_stat, x = ~lifetime, y = ~share, color = ~media_source,
+        type = 'bar') %>%
+  layout(title = 'Удержание пользователей в зависимости от канала привлечения',
+         yaxis = list(rangemode = 'tozero'))
+
+```
+
+<br>
+
+## Задание 2
+У вас есть приложение (маркетплейс), 16 октября приложение обновили с версии 0.3 до версии 0.4. Необходимо оценить результаты обновления. Описание приложения, точек монетизации и изменений в версии дано ниже. Данные после 1 ноября -- артефакт, на них можно не обращать внимание.
+
+### Описание приложения
+Маркетплейс (ozon, беру, avito, юла, joom, aliexpress, ebay и подобные). Приложение бесплатно для покупателей, вся выручка идет с продавцов. Продавцы платят:
+
+- долю от каждой продажи (безлимитное количество объявлений) или фиксированную плату за какое-то количество объявлений
+
+- за использование некоторых инструментов, по выбору продавца:
+
+     + промоутинг объявления в топе выдачи на какое-то время (если купить, то при релевантном запросе объявление этого продавца на какое-то время будет в выдаче выше аналогичных объявлений других продавцов)
+ 
+     + за страховку сделки маркетплейсом (деньги на счету покупателя блокируются до получения товара)
+ 
+     + за возможность указать телефон в профиле продавца
+ 
+     + индивидуальное оформление объявлений (фон, рамка, эмодзи)
+ 
+ <br>
+ 
+### Changelog (изменения в функционале и исправления ошибок):
+
+- сделали отдельный интерфейс для телефонов и планшетов (различия в ориентации, расположении некоторых кнопок и проч)
+
+- подключили курьерскую службу и точки доставки (доставкой занимается маркетплейс, а не продавец)
+
+- добавили шаблоны объявлений для наиболее популярных товаров
+
+- включили сортировку объявлений по дате последнего изменения
+
+- поменяли систему для техподдержки (был сервис Zendesk, стал Helpshift)
+
+- починили редкий баг в автосохранении черновиков объявлений
+
+- добавили звонки/голосовую связь между пользователями
+
+- размер приложения увеличился на 70Мб и составил 130Мб
+
+<br>
+
+### Задание
+Покажите на графике, как изменилась прибыль проекта после запуска новой версии (если сможете, отметьте вертикальной линией на графике дату выхода новой версии). Поэкспериментируйте, какой тип графика будет тут удобнее для восприятия.
+
+Проведите исследование и объясните причины такой динамики (подкрепите выводы графиками или таблицами). Также сформулируйте гипотезы, что из продуктовых изменений могло привести к таким эффектами.
+
+Данные после 1 ноября -- артефакт, на них можно не обращать внимание и не включать в интепретацию. На графике можно их скрыть.
+
+```{r, include=FALSE}
+# импортируем данные и конвертируем
+payments <- fread('https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/payments.csv')
+# payments[, pay_dt := as.Date(pay_dt)]
+
+# добавляем источник пользователя
+payments <- merge(payments, users[, list(user_id, media_source)], by = 'user_id', all.x = TRUE)
+
+# смотрим структуру прибыли
+plot_ly(payments[, list(gross = sum(purchase)), keyby = list(pay_dt, media_source)], 
+        x = ~pay_dt, y = ~gross, color = ~media_source, 
+        type = 'scatter', mode = 'none', stackgroup = 'one') %>%
+  layout(
+    yaxis = list(rangemode = 'tozero')
+  )
+
+plot_ly(payments[, list(gross = sum(purchase)), keyby = list(pay_dt, media_source)], 
+        x = ~pay_dt, y = ~gross, color = ~media_source, 
+        type = 'bar') %>%
+  layout(
+    barmode = 'stack',
+    yaxis = list(rangemode = 'tozero')
+  )
+```
+
+
+<br>
+
+## Задание 3
+Посчитайте основные монетизационные метрики (количество платящих, конверсию, прибыль, ARPU, ARPPU, средний чек и среднее количество платежей, средний CPI), представьте в виде таблицы. В идеале должно получится четыре строчки в таблице: на каждый канал и одна общая. По возможности, округляйте дроби до значимых знаков после запятой (3 для конверсии и arpu/arppu, 1 для среднего чека или ср.количества платежей и т.д.).
+ 
+Нарисуйте график LTV по каналам привлечения пользователей.
+Проинтерпретируйте график LTV, оцените перспективу окупаемости пользователей с разных рекламных площадок. Дайте рекомендации маркетингу и специалистам по закупке трафика.
+
+```{r, include=FALSE}
+# присоединяем к инсталлам платежи
+ltv <- merge(users, payments, by = c('user_id', 'media_source'), all.x = TRUE)
+ltv[, lifetime := as.Date(pay_dt) - as.Date(dt)]
+
+# ограничиваем - либо платежи за 7 дней, либо неплатящий
+ltv_stat <- ltv[lifetime < 7 | is.na(lifetime)]
+
+# считаем статистики по источникам инсталлов и общий
+ltv_stat <- rbind(
+  ltv_stat[, list(total_users = uniqueN(user_id),
+             payers = uniqueN(user_id[!is.na(purchase)]),
+             gross = sum(purchase, na.rm = TRUE),
+             n_purchases = sum(!is.na(purchase)),
+             CPI = mean(CPI, na.rm = TRUE)), by = media_source],
+  ltv_stat[, list(media_source = 'Total',
+             total_users = uniqueN(user_id),
+             payers = uniqueN(user_id[!is.na(purchase)]),
+             gross = sum(purchase, na.rm = TRUE),
+             n_purchases = sum(!is.na(purchase)),
+             CPI = mean(CPI, na.rm = TRUE))])
+
+# добавляем еще статистики
+ltv_stat[, conversion := round(payers / total_users, 3)]
+ltv_stat[, ARPU := round(gross / total_users, 3)]
+ltv_stat[, ARPPU := round(gross / payers, 3)]
+ltv_stat[, Av.purchases := round(n_purchases / payers, 1)]
+ltv_stat[, Av.bill := round(gross / n_purchases, 1)]
+ltv_stat[, CPI := round(CPI, 2)]
+ltv_stat
+```
+
+```{r, include=FALSE}
+# собираем таблицу по распределению платежей в днях от инсталла
+# и данными по общему числу инсталлов от этого источника
+ltv_curve <- merge(
+  ltv[!is.na(lifetime), list(gross = sum(purchase)), by = list(media_source, lifetime)],
+  ltv[, list(total_users = uniqueN(user_id)), by = list(media_source)],
+  by = 'media_source', all.x = TRUE)
+# сортируем и считаем кумулятивную прибыл
+ltv_curve <- ltv_curve[order(media_source, lifetime)]
+ltv_curve[, cum_gross := cumsum(gross), by = media_source]
+
+# считаем кумулятивное arpu
+ltv_curve[, cumARPU := cum_gross / total_users, by = media_source]                   
+  
+# так как есть только 21 день, рисуем кривую на 21 день
+plot_ly(ltv_curve[lifetime <= 21], x = ~lifetime, y = ~cumARPU, color = ~media_source,
+        type = 'scatter', mode = 'lines')  %>%
+  layout(
+    yaxis = list(rangemode = 'tozero')
+  )
+```
+
+
+## Задание 4
+Нарисуйте воронку шагов онбординга (первый событий пользователя в приложении) по версиям. Сделайте выводы, сформулируйте рекомендации для команды разработки. Информация о новых особенностях версии 0.4 дана выше в задании 2.
+
+Смысл шагов:
+
+- st01_appstart - запуск приложения
+
+- st02_sdk - инициализация sdk Facebook, Appsflyer
+
+- st03_authorization - получение с сервера данных о профиле пользователя
+
+- st04_download - дозагрузка дополнительных материалов
+
+- st05_main_window - отрисовка основного окна приложения (завершение процесса старта)
+
+- st06_oboarding_start - начало онбординга (как работать с приложением)
+
+- st07_oboarding_end - завершение онбординга
+
+- st08_add_adv - пользователь добавил самостоятельно объявление
+
+- st9_purchase - пользователь сделал платеж
+
+```{r, include=FALSE}
+# импортируем данные
+onboarding <- fread('https://raw.githubusercontent.com/Leer/mar221f/main/data/hw_1/onboarding.csv')
+
+# считаем количество пользователей на каждом шагу и долю от количества на 1 шаге
+onboarding_stat <- onboarding[, list(n_users = uniqueN(user_id)), by = list(version, step)]
+onboarding_stat[, total_users := n_users[step == 1], by = version]
+# onboarding_stat[, total_users := onboarding[, uniqueN(user_id)]]
+onboarding_stat[, share := n_users / total_users]
+
+# флаг версии превращаем в строку
+onboarding_stat[, version := as.character(version)]
+
+# рисуем график по долям, чтобы можно было сравнивать
+plot_ly(onboarding_stat, x = ~step, y = ~share, type = 'bar', color = ~version)
+```
