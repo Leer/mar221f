@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ru-RU" xml:lang="ru-RU">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>SQL | Методы анализа больших данных</title>
+  <meta name="description" content="SQL | Методы анализа больших данных" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="SQL | Методы анализа больших данных" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="SQL | Методы анализа больших данных" />
+  
+  
+  
+
+<meta name="author" content="Ph.A.Upravitelev" />
+
+
+<meta name="date" content="2023-11-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ux.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">mar 221f</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html"><i class="fa fa-check"></i>О курсе и аналитиках</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#запись-занятия"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#обо-мне"><i class="fa fa-check"></i>Обо мне</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#contacts"><i class="fa fa-check"></i>Contacts</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#о-курсе"><i class="fa fa-check"></i>О курсе</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#темы-лекций"><i class="fa fa-check"></i>темы лекций</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#факультативно"><i class="fa fa-check"></i>факультативно</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#формы-контроля"><i class="fa fa-check"></i>формы контроля</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#виды-аналитиков"><i class="fa fa-check"></i>Виды аналитиков</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#data-scientists"><i class="fa fa-check"></i>data scientists</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#web-аналитика"><i class="fa fa-check"></i>web-аналитика</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#маркетинговая-аналитика"><i class="fa fa-check"></i>маркетинговая аналитика</a></li>
+<li><a href="c1_intro.html#section" id="toc-section"></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#продуктовая-аналитика"><i class="fa fa-check"></i>Продуктовая аналитика</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#что-такое-продукт"><i class="fa fa-check"></i>что такое продукт</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#cxux-исследователи"><i class="fa fa-check"></i>CX/UX-исследователи</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#структура-команды-разработки"><i class="fa fa-check"></i>структура команды разработки</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#роли-продуктовых-аналитиков"><i class="fa fa-check"></i>роли продуктовых аналитиков</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#стадии-развития-продукта"><i class="fa fa-check"></i>Стадии развития продукта</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#этапы-жизни"><i class="fa fa-check"></i>этапы жизни</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#технические-этапы"><i class="fa fa-check"></i>технические этапы</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#бизнес-модели"><i class="fa fa-check"></i>Бизнес-модели</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#компоненты"><i class="fa fa-check"></i>компоненты</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#варианты"><i class="fa fa-check"></i>варианты</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#полезные-материалы"><i class="fa fa-check"></i>Полезные материалы</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#домашнее-задание"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#для-тех-кто-не-был-на-прошлом-курсе"><i class="fa fa-check"></i>Для тех, кто не был на прошлом курсе</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html"><i class="fa fa-check"></i>Метрики вовлечения pt1</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#запись-занятия-1"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#aarrr-фреймворк"><i class="fa fa-check"></i>AARRR фреймворк</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#user-aquisition"><i class="fa fa-check"></i>User Aquisition</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#процесс-привлечения-пользователей"><i class="fa fa-check"></i>Процесс привлечения пользователей</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#маркетинговая-воронка-в-мобильных-приложениях"><i class="fa fa-check"></i>Маркетинговая воронка в мобильных приложениях</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#новый-пользователь"><i class="fa fa-check"></i>Новый пользователь</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#активность-и-вовлечение"><i class="fa fa-check"></i>Активность и вовлечение</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#dau-wau-mau"><i class="fa fa-check"></i>DAU, WAU, MAU</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#stickness-sticky-factor"><i class="fa fa-check"></i>Stickness / Sticky factor</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#retention-rate"><i class="fa fa-check"></i>Retention rate</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#churn-rate"><i class="fa fa-check"></i>Churn rate</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#sessions-per-day"><i class="fa fa-check"></i>Sessions per day</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#полезные-материалы-1"><i class="fa fa-check"></i>Полезные материалы</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#домашнее-задание-1"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-1-iatytd"><i class="fa fa-check"></i>level 1 (IATYTD)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-2-hntr"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-3-hmp"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-4-uv"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-5-n"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html"><i class="fa fa-check"></i>Метрики вовлечения pt2</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#запись-занятия-2"><i class="fa fa-check"></i>Запись занятия</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-2-hntr-1"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-4-uv-1"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-5-n-1"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#расчет-retention"><i class="fa fa-check"></i>Расчет retention</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#домашнее-задание-2"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-1-iatytd-1"><i class="fa fa-check"></i>level 1 (IATYTD)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-2-hntr-2"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-3-hmp-1"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-4-uv-2"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-5-n-2"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html"><i class="fa fa-check"></i>Метрики монетизации pt.1</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#запись-занятия-3"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#разбор-домашнего-задания"><i class="fa fa-check"></i>Разбор домашнего задания</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-2-hntr-3"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-3-hmp-2"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-4-uv-3"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-5-n-3"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#платежные-метрики"><i class="fa fa-check"></i>Платежные метрики</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#gross-net"><i class="fa fa-check"></i>Gross / Net</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#конверсия"><i class="fa fa-check"></i>Конверсия</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#полезные-материалы-2"><i class="fa fa-check"></i>Полезные материалы</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#домашнее-задание-3"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-1-iatytd-2"><i class="fa fa-check"></i>level 1 (IATYTD)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-2-hntr-4"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-3-hmp-3"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-4-uv-4"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-5-n-4"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html"><i class="fa fa-check"></i>Метрики монетизации pt.2</a>
+<ul>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#запись-занятия-4"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#разбор-домашнего-задания-1"><i class="fa fa-check"></i>Разбор домашнего задания</a>
+<ul>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#level-2-hntr-5"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#level-3-hmp-4"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#воронка-платежей"><i class="fa fa-check"></i>Воронка платежей</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html"><i class="fa fa-check"></i>Метрики монетизации pt.3</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#запись-занятия-5"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#arpu-arppu"><i class="fa fa-check"></i>ARPU / ARPPU</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#задача-1-1"><i class="fa fa-check"></i>задача 1</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#ltv"><i class="fa fa-check"></i>LTV</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#задача-2-1"><i class="fa fa-check"></i>задача 2</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#полезные-материалы-3"><i class="fa fa-check"></i>Полезные материалы</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html"><i class="fa fa-check"></i>Unit-экономика</a>
+<ul>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#запись-занятия-6"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#unit-экономика-1"><i class="fa fa-check"></i>Unit-экономика</a>
+<ul>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#что-это-и-зачем"><i class="fa fa-check"></i>Что это и зачем</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#юниты-масштабирования"><i class="fa fa-check"></i>Юниты масштабирования</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#основные-термины"><i class="fa fa-check"></i>Основные термины</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#пример"><i class="fa fa-check"></i>Пример</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#шаблоны-расчета"><i class="fa fa-check"></i>Шаблоны расчета</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#unit-экономика-для-аналитиков"><i class="fa fa-check"></i>Unit-экономика для аналитиков</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#дополнительные-материалы"><i class="fa fa-check"></i>Дополнительные материалы</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html"><i class="fa fa-check"></i>Homework 1</a>
+<ul>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#общие-замечания"><i class="fa fa-check"></i>Общие замечания</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#описание-данных"><i class="fa fa-check"></i>Описание данных</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-1"><i class="fa fa-check"></i>Задание 1</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-2"><i class="fa fa-check"></i>Задание 2</a>
+<ul>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#описание-приложения"><i class="fa fa-check"></i>Описание приложения</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#changelog-изменения-в-функционале-и-исправления-ошибок"><i class="fa fa-check"></i>Changelog (изменения в функционале и исправления ошибок):</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание"><i class="fa fa-check"></i>Задание</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-3"><i class="fa fa-check"></i>Задание 3</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-4"><i class="fa fa-check"></i>Задание 4</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="ux.html"><a href="ux.html"><i class="fa fa-check"></i>UX intro</a>
+<ul>
+<li class="chapter" data-level="" data-path="ux.html"><a href="ux.html#запись-занятия-7"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="ux.html"><a href="ux.html#полезные-ссылки"><i class="fa fa-check"></i>Полезные ссылки</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html"><i class="fa fa-check"></i>SQL</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#запись-занятия-8"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#dbeaver"><i class="fa fa-check"></i>DBeaver</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#параметры-подключений"><i class="fa fa-check"></i>Параметры подключений</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#sql-1"><i class="fa fa-check"></i>SQL</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#main-structure"><i class="fa fa-check"></i>main structure</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#simple-query"><i class="fa fa-check"></i>simple query</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#select-columns-selection"><i class="fa fa-check"></i>select: columns selection</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#where-rows-selection"><i class="fa fa-check"></i>where: rows selection</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#group-by-aggregations"><i class="fa fa-check"></i>group by: aggregations</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#join"><i class="fa fa-check"></i>join</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#r-connectors"><i class="fa fa-check"></i>r connectors</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#подключение-и-просмотр-бд-из-rstudio"><i class="fa fa-check"></i>Подключение и просмотр БД из RStudio</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#полезные-ссылки-1"><i class="fa fa-check"></i>Полезные ссылки</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#домашнее-задание-4"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#level-1-iatytd-3"><i class="fa fa-check"></i>level 1 (IATYTD)</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#level-2-hntr-6"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#level-3-hmp-5"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#level-4-uv-5"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#level-5-n-5"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Методы анализа больших данных</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="sql" class="section level1 unnumbered hasAnchor">
+<h1>SQL<a href="sql.html#sql" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="запись-занятия-8" class="section level2 unnumbered hasAnchor">
+<h2>Запись занятия<a href="sql.html#запись-занятия-8" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/o44EYYJJN_A?si=_IFjq6gmtMwyMDdb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+</div>
+<div id="dbeaver" class="section level2 unnumbered hasAnchor">
+<h2>DBeaver<a href="sql.html#dbeaver" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><a href="https://dbeaver.io/download/" class="uri">https://dbeaver.io/download/</a></p>
+<p><br></p>
+</div>
+<div id="параметры-подключений" class="section level2 unnumbered hasAnchor">
+<h2>Параметры подключений<a href="sql.html#параметры-подключений" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>user = “student”</p>
+<p>password = “pmsar2018”</p>
+<p>dbname = “pmsar”</p>
+<p>host = “188.225.77.95”</p>
+<p>port = 5432</p>
+<p><br></p>
+</div>
+<div id="sql-1" class="section level2 unnumbered hasAnchor">
+<h2>SQL<a href="sql.html#sql-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="main-structure" class="section level3 unnumbered hasAnchor">
+<h3>main structure<a href="sql.html#main-structure" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>SQL - декларативный язык с жестко закрепленным порядком операторов (зарезервированных ключевых слов) в sql-выражении. При запросе данных из таблицы обязательны <code>select</code> и <code>from</code>, остальные - по необходимости.</p>
+<ul>
+<li><p>select (указание, какие колонки таблицы должны быть в результате, аналог j в data.table- dt[i, j, by])</p></li>
+<li><p>from (из какой таблицы или результата слияния таблиц должны быть выбраны колонки)</p></li>
+<li><p>join (какая таблица должна быть присоединена по ключу, аналог merge в R)</p></li>
+<li><p>where (набор логических выражений для фильтрация по строкам, аналогично фильтрации в data.table в разделе i - dt[i, j, by])</p></li>
+<li><p>group by (по значениям каких колонок должна быть группировка, аналог by в data.table - dt[i, j, by])</p></li>
+<li><p>order by (по значениям каких колонок должна быть отсортированная результирующая таблица)</p></li>
+<li><p>limit (ограничение на выдачу, сколько строк таблицы должно быть отдано)</p></li>
+<li><p>; (завершение запроса, некоторые IDE могут за пользователя подставлять)</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="simple-query" class="section level3 unnumbered hasAnchor">
+<h3>simple query<a href="sql.html#simple-query" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Простейшие арифметические запросы требуют <code>select</code> и все:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb34-1"><a href="sql.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">5</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-1">Table 1: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">?column?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb35-1"><a href="sql.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> now();</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 2: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">now</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2023-11-17 17:39:54</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><br></p>
+</div>
+<div id="select-columns-selection" class="section level3 unnumbered hasAnchor">
+<h3>select: columns selection<a href="sql.html#select-columns-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Запросы для выбора колонок. <code>*</code> используется как аналог <code>select all</code>, то есть выбор всех колонок, которые есть в таблице.</p>
+<p>В разделе from указывается схема (набор таблиц) и таблица из этой схемы, через точку: <code>public.chars</code> означает <code>таблица chars из схемы public</code>:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="sql.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb36-2"><a href="sql.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">*</span></span>
+<span id="cb36-3"><a href="sql.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb36-4"><a href="sql.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="kw">limit</span> <span class="dv">3</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table style="width:100%;">
+<caption><span id="tab:unnamed-chunk-3">Table 3: </span>3 records</caption>
+<colgroup>
+<col width="7%" />
+<col width="11%" />
+<col width="5%" />
+<col width="3%" />
+<col width="8%" />
+<col width="8%" />
+<col width="7%" />
+<col width="8%" />
+<col width="5%" />
+<col width="23%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">row.names</th>
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="right">mass</th>
+<th align="left">hair_color</th>
+<th align="left">skin_color</th>
+<th align="left">eye_color</th>
+<th align="left">birth_year</th>
+<th align="left">gender</th>
+<th align="left">url</th>
+<th align="left">planet_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Luke Skywalker</td>
+<td align="right">172</td>
+<td align="right">77</td>
+<td align="left">blond</td>
+<td align="left">fair</td>
+<td align="left">blue</td>
+<td align="left">19BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/1/" class="uri">https://swapi.co/api/people/1/</a></td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">C-3PO</td>
+<td align="right">167</td>
+<td align="right">75</td>
+<td align="left">n/a</td>
+<td align="left">gold</td>
+<td align="left">yellow</td>
+<td align="left">112BBY</td>
+<td align="left">n/a</td>
+<td align="left"><a href="https://swapi.co/api/people/2/" class="uri">https://swapi.co/api/people/2/</a></td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">Darth Vader</td>
+<td align="right">202</td>
+<td align="right">136</td>
+<td align="left">none</td>
+<td align="left">white</td>
+<td align="left">yellow</td>
+<td align="left">41.9BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/4/" class="uri">https://swapi.co/api/people/4/</a></td>
+<td align="left">Tatooine</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Также в блоке <code>select</code> можно указать одну или несколько колонок, результат арифметических операций над колонками.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb37-1"><a href="sql.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb37-2"><a href="sql.html#cb37-2" aria-hidden="true" tabindex="-1"></a>  name,</span>
+<span id="cb37-3"><a href="sql.html#cb37-3" aria-hidden="true" tabindex="-1"></a>  height,</span>
+<span id="cb37-4"><a href="sql.html#cb37-4" aria-hidden="true" tabindex="-1"></a>  planet_name</span>
+<span id="cb37-5"><a href="sql.html#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb37-6"><a href="sql.html#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="kw">limit</span> <span class="dv">3</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 4: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="left">planet_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Luke Skywalker</td>
+<td align="right">172</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="even">
+<td align="left">C-3PO</td>
+<td align="right">167</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="odd">
+<td align="left">Darth Vader</td>
+<td align="right">202</td>
+<td align="left">Tatooine</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Алиасы формы <code>column_name as new_name</code> используются для переименования колонок или результатов вычислений.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="sql.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb38-2"><a href="sql.html#cb38-2" aria-hidden="true" tabindex="-1"></a>  name <span class="kw">as</span> char_name,</span>
+<span id="cb38-3"><a href="sql.html#cb38-3" aria-hidden="true" tabindex="-1"></a>  height,</span>
+<span id="cb38-4"><a href="sql.html#cb38-4" aria-hidden="true" tabindex="-1"></a>  planet_name,</span>
+<span id="cb38-5"><a href="sql.html#cb38-5" aria-hidden="true" tabindex="-1"></a>  height <span class="op">*</span> <span class="dv">3</span> <span class="kw">as</span> height_mult</span>
+<span id="cb38-6"><a href="sql.html#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb38-7"><a href="sql.html#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="kw">limit</span> <span class="dv">3</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-5">Table 5: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="left">char_name</th>
+<th align="right">height</th>
+<th align="left">planet_name</th>
+<th align="right">height_mult</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Luke Skywalker</td>
+<td align="right">172</td>
+<td align="left">Tatooine</td>
+<td align="right">516</td>
+</tr>
+<tr class="even">
+<td align="left">C-3PO</td>
+<td align="right">167</td>
+<td align="left">Tatooine</td>
+<td align="right">501</td>
+</tr>
+<tr class="odd">
+<td align="left">Darth Vader</td>
+<td align="right">202</td>
+<td align="left">Tatooine</td>
+<td align="right">606</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><br></p>
+</div>
+<div id="where-rows-selection" class="section level3 unnumbered hasAnchor">
+<h3>where: rows selection<a href="sql.html#where-rows-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Для фильтрации по строкам используют набор логических выражений в разделе <code>where</code>. <code>where planet_name = 'Coruscant'</code> читается как <code>все строки, в которых в колонке planet_name встречается значение Coruscant</code>. Строковые значения и даты указыаются в одинарных кавычках, двойные кавычки только для названий колонок и схем.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="sql.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb39-2"><a href="sql.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  name,</span>
+<span id="cb39-3"><a href="sql.html#cb39-3" aria-hidden="true" tabindex="-1"></a>  height,</span>
+<span id="cb39-4"><a href="sql.html#cb39-4" aria-hidden="true" tabindex="-1"></a>  planet_name</span>
+<span id="cb39-5"><a href="sql.html#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb39-6"><a href="sql.html#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> planet_name <span class="op">=</span> <span class="st">&#39;Coruscant&#39;</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 6: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="left">planet_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Finis Valorum</td>
+<td align="right">170</td>
+<td align="left">Coruscant</td>
+</tr>
+<tr class="even">
+<td align="left">Adi Gallia</td>
+<td align="right">184</td>
+<td align="left">Coruscant</td>
+</tr>
+<tr class="odd">
+<td align="left">Jocasta Nu</td>
+<td align="right">167</td>
+<td align="left">Coruscant</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Логические выражения можно сочетать через операторы <code>and</code> и <code>or</code>, они аналогичны логическим операторам <code>&amp;</code> и <code>|</code> в R.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb40-1"><a href="sql.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb40-2"><a href="sql.html#cb40-2" aria-hidden="true" tabindex="-1"></a>  name,</span>
+<span id="cb40-3"><a href="sql.html#cb40-3" aria-hidden="true" tabindex="-1"></a>  height,</span>
+<span id="cb40-4"><a href="sql.html#cb40-4" aria-hidden="true" tabindex="-1"></a>  planet_name</span>
+<span id="cb40-5"><a href="sql.html#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb40-6"><a href="sql.html#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> </span>
+<span id="cb40-7"><a href="sql.html#cb40-7" aria-hidden="true" tabindex="-1"></a>  planet_name <span class="op">=</span> <span class="st">&#39;Coruscant&#39;</span> </span>
+<span id="cb40-8"><a href="sql.html#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">or</span> height <span class="op">&gt;=</span> <span class="dv">170</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-7">Table 7: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="left">planet_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Luke Skywalker</td>
+<td align="right">172</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="even">
+<td align="left">Darth Vader</td>
+<td align="right">202</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="odd">
+<td align="left">Owen Lars</td>
+<td align="right">178</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="even">
+<td align="left">Biggs Darklighter</td>
+<td align="right">183</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="odd">
+<td align="left">Anakin Skywalker</td>
+<td align="right">188</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="even">
+<td align="left">Cliegg Lars</td>
+<td align="right">183</td>
+<td align="left">Tatooine</td>
+</tr>
+<tr class="odd">
+<td align="left">Boba Fett</td>
+<td align="right">183</td>
+<td align="left">Kamino</td>
+</tr>
+<tr class="even">
+<td align="left">Lama Su</td>
+<td align="right">229</td>
+<td align="left">Kamino</td>
+</tr>
+<tr class="odd">
+<td align="left">Taun We</td>
+<td align="right">213</td>
+<td align="left">Kamino</td>
+</tr>
+<tr class="even">
+<td align="left">Poggle the Lesser</td>
+<td align="right">183</td>
+<td align="left">Geonosis</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Оператор <code>in</code> аналогичен оператору <code>%in%</code> в R. Отрицание производится как <code>not in</code>:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb41-1"><a href="sql.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb41-2"><a href="sql.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  name,</span>
+<span id="cb41-3"><a href="sql.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  height,</span>
+<span id="cb41-4"><a href="sql.html#cb41-4" aria-hidden="true" tabindex="-1"></a>  planet_name</span>
+<span id="cb41-5"><a href="sql.html#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb41-6"><a href="sql.html#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> </span>
+<span id="cb41-7"><a href="sql.html#cb41-7" aria-hidden="true" tabindex="-1"></a>  planet_name <span class="kw">in</span> (<span class="st">&#39;Coruscant&#39;</span>, <span class="st">&#39;Alderaan&#39;</span>);</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-8">Table 8: </span>6 records</caption>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="left">planet_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Leia Organa</td>
+<td align="right">150</td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="even">
+<td align="left">Bail Prestor Organa</td>
+<td align="right">191</td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="odd">
+<td align="left">Raymus Antilles</td>
+<td align="right">188</td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="even">
+<td align="left">Finis Valorum</td>
+<td align="right">170</td>
+<td align="left">Coruscant</td>
+</tr>
+<tr class="odd">
+<td align="left">Adi Gallia</td>
+<td align="right">184</td>
+<td align="left">Coruscant</td>
+</tr>
+<tr class="even">
+<td align="left">Jocasta Nu</td>
+<td align="right">167</td>
+<td align="left">Coruscant</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Также есть инструментарий проверки на вхождение, аналог <code>grepl()</code> в R. Для этого используется оператор <code>like</code>, а в качестве искомого выражения указывается строка, где <code>%</code> используются в качестве <code>любые символы</code>. Выражение <code>planet_name like '%Coru%'</code> можно прочитать как “все строки таблицы, в которых в колонке planet_name встречаются строковые значения, содержащие ‘Coru’, притом и до, и после ‘Coru’ могут быть еще символы”“. Отрицание также делается как <code>not like</code>, для регулярных выражений используется оператор <code>~</code>:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb42-1"><a href="sql.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb42-2"><a href="sql.html#cb42-2" aria-hidden="true" tabindex="-1"></a>  name,</span>
+<span id="cb42-3"><a href="sql.html#cb42-3" aria-hidden="true" tabindex="-1"></a>  height,</span>
+<span id="cb42-4"><a href="sql.html#cb42-4" aria-hidden="true" tabindex="-1"></a>  planet_name</span>
+<span id="cb42-5"><a href="sql.html#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb42-6"><a href="sql.html#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> </span>
+<span id="cb42-7"><a href="sql.html#cb42-7" aria-hidden="true" tabindex="-1"></a>  planet_name <span class="kw">like</span> <span class="st">&#39;%Coru%&#39;</span></span>
+<span id="cb42-8"><a href="sql.html#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">or</span> planet_name ~ <span class="st">&#39;raan&#39;</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-9">Table 9: </span>6 records</caption>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="left">planet_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Leia Organa</td>
+<td align="right">150</td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="even">
+<td align="left">Bail Prestor Organa</td>
+<td align="right">191</td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="odd">
+<td align="left">Raymus Antilles</td>
+<td align="right">188</td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="even">
+<td align="left">Finis Valorum</td>
+<td align="right">170</td>
+<td align="left">Coruscant</td>
+</tr>
+<tr class="odd">
+<td align="left">Adi Gallia</td>
+<td align="right">184</td>
+<td align="left">Coruscant</td>
+</tr>
+<tr class="even">
+<td align="left">Jocasta Nu</td>
+<td align="right">167</td>
+<td align="left">Coruscant</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><br></p>
+</div>
+<div id="group-by-aggregations" class="section level3 unnumbered hasAnchor">
+<h3>group by: aggregations<a href="sql.html#group-by-aggregations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Группировки аналогичны группировкам в data.table - для каждой группы строк, выделяемых по значениям группирующей колонки, над колонками производятся вычисления (средние, суммы и проч). В примере ниже считается количество строк в таблице персонажей для каждого значения, количество уникальных персонажей (в таблице одна строка на персонажа, так что совпадает с предыдущим значением) и максимальный рост среди персонажей этой группы (всех персонажей с этой планеты):</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb43-1"><a href="sql.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb43-2"><a href="sql.html#cb43-2" aria-hidden="true" tabindex="-1"></a>  planet_name,</span>
+<span id="cb43-3"><a href="sql.html#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">as</span> n_rows,</span>
+<span id="cb43-4"><a href="sql.html#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="kw">distinct</span> name) <span class="kw">as</span> n_unique_chars,</span>
+<span id="cb43-5"><a href="sql.html#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(height) <span class="kw">as</span> max_height</span>
+<span id="cb43-6"><a href="sql.html#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars</span>
+<span id="cb43-7"><a href="sql.html#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="kw">group</span> <span class="kw">by</span> planet_name</span>
+<span id="cb43-8"><a href="sql.html#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="kw">limit</span> <span class="dv">10</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-10">Table 10: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">planet_name</th>
+<th align="right">n_rows</th>
+<th align="right">n_unique_chars</th>
+<th align="right">max_height</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Alderaan</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">191</td>
+</tr>
+<tr class="even">
+<td align="left">Aleen Minor</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">79</td>
+</tr>
+<tr class="odd">
+<td align="left">Bespin</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">175</td>
+</tr>
+<tr class="even">
+<td align="left">Bestine IV</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">180</td>
+</tr>
+<tr class="odd">
+<td align="left">Cato Neimoidia</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">191</td>
+</tr>
+<tr class="even">
+<td align="left">Cerea</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">198</td>
+</tr>
+<tr class="odd">
+<td align="left">Champala</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">196</td>
+</tr>
+<tr class="even">
+<td align="left">Chandrila</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">150</td>
+</tr>
+<tr class="odd">
+<td align="left">Concord Dawn</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">183</td>
+</tr>
+<tr class="even">
+<td align="left">Corellia</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">180</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><br></p>
+</div>
+<div id="join" class="section level3 unnumbered hasAnchor">
+<h3>join<a href="sql.html#join" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Слияние таблиц по ключу, в R аналогом выступает <code>merge()</code>. В зависимости от схемы присоединения, используются разные операторы джойна, чайще сего - <code>left join</code> (сохраняем все значения ключевой колонки в той таблице, к которой присоединяем) и <code>inner join</code> (сохраняем только те строки, по которым значения есть и в той таблице, к которой присоединяем, и в которой присоединяем).</p>
+<p>При этом в блоке <code>select</code> указываем те колонки, которые хотим получить из результата слияния. Если в таблицах используются одни и те же назания колонок, то колонки надо указывать с указанием таблицы или алиаса таблицы - <code>table1.column_name</code>.</p>
+<p>В разделе <code>from</code> указывается таблица, к которой присоединяется вторая или следующие таблицы. По возможности это должна быть самая короткая таблица.</p>
+<p>Ключ, по которому соединяются колонки - <code>using(column_name)</code>. В том случае, когда в разных таблицах колонка-ключ называется по-разному, можно использовать выражение <code>on table1.column_name1 = table2.column_name2</code>. Где <code>table1</code> и <code>table2</code> - назания таблиц и могут быть заменены алиасами таблиц. В редких случаях в конструкции с <code>on</code> можно использовать знаки сравнения, чтобы фильтровать определенные значения,
+это может ускорять выполнение запроса, но стилистически это лучше делать в разделе <code>where</code>.</p>
+<p>Если через <code>join</code> присоединяется несколько таблиц, то они присоединяются не последовательно, к результату предыдущего джойна, а к таблице, указанной в <code>from</code> - то есть, порядок джойнов значения не имеет.</p>
+<p>В том случае, если используется внутренний селект (в выражении join указывается не таблица, а подзапрос, с select, from и прочими атрибутами), то для таким образом полученной таблицы нужно указать алиас.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb44-1"><a href="sql.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb44-2"><a href="sql.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  name,</span>
+<span id="cb44-3"><a href="sql.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  height,</span>
+<span id="cb44-4"><a href="sql.html#cb44-4" aria-hidden="true" tabindex="-1"></a>  skin_color,</span>
+<span id="cb44-5"><a href="sql.html#cb44-5" aria-hidden="true" tabindex="-1"></a>  climate,</span>
+<span id="cb44-6"><a href="sql.html#cb44-6" aria-hidden="true" tabindex="-1"></a>  gravity,</span>
+<span id="cb44-7"><a href="sql.html#cb44-7" aria-hidden="true" tabindex="-1"></a>  terrain,</span>
+<span id="cb44-8"><a href="sql.html#cb44-8" aria-hidden="true" tabindex="-1"></a>  ch.url <span class="kw">as</span> char_url,</span>
+<span id="cb44-9"><a href="sql.html#cb44-9" aria-hidden="true" tabindex="-1"></a>  pl.url <span class="kw">as</span> planet_url</span>
+<span id="cb44-10"><a href="sql.html#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> <span class="kw">public</span>.chars <span class="kw">as</span> ch</span>
+<span id="cb44-11"><a href="sql.html#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="kw">left</span> <span class="kw">join</span> (</span>
+<span id="cb44-12"><a href="sql.html#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb44-13"><a href="sql.html#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">from</span> <span class="kw">public</span>.planets</span>
+<span id="cb44-14"><a href="sql.html#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">limit</span> <span class="dv">10</span>) <span class="kw">as</span> pl <span class="kw">using</span>(planet_name)</span>
+<span id="cb44-15"><a href="sql.html#cb44-15" aria-hidden="true" tabindex="-1"></a><span class="kw">order</span> <span class="kw">by</span> name</span>
+<span id="cb44-16"><a href="sql.html#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="kw">limit</span> <span class="dv">5</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-11">Table 11: </span>5 records</caption>
+<colgroup>
+<col width="13%" />
+<col width="4%" />
+<col width="8%" />
+<col width="6%" />
+<col width="7%" />
+<col width="14%" />
+<col width="21%" />
+<col width="21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="left">skin_color</th>
+<th align="left">climate</th>
+<th align="left">gravity</th>
+<th align="left">terrain</th>
+<th align="left">char_url</th>
+<th align="left">planet_url</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Ackbar</td>
+<td align="right">180</td>
+<td align="left">brown mottle</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"><a href="https://swapi.co/api/people/27/" class="uri">https://swapi.co/api/people/27/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Adi Gallia</td>
+<td align="right">184</td>
+<td align="left">dark</td>
+<td align="left">temperate</td>
+<td align="left">1 standard</td>
+<td align="left">cityscape, mountains</td>
+<td align="left"><a href="https://swapi.co/api/people/55/" class="uri">https://swapi.co/api/people/55/</a></td>
+<td align="left"><a href="https://swapi.co/api/planets/9/" class="uri">https://swapi.co/api/planets/9/</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Anakin Skywalker</td>
+<td align="right">188</td>
+<td align="left">fair</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"><a href="https://swapi.co/api/people/11/" class="uri">https://swapi.co/api/people/11/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Ayla Secura</td>
+<td align="right">178</td>
+<td align="left">blue</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"><a href="https://swapi.co/api/people/46/" class="uri">https://swapi.co/api/people/46/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Bail Prestor Organa</td>
+<td align="right">191</td>
+<td align="left">tan</td>
+<td align="left">temperate</td>
+<td align="left">1 standard</td>
+<td align="left">grasslands, mountains</td>
+<td align="left"><a href="https://swapi.co/api/people/68/" class="uri">https://swapi.co/api/people/68/</a></td>
+<td align="left"><a href="https://swapi.co/api/planets/2/" class="uri">https://swapi.co/api/planets/2/</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Визуальная схема вариантов джойнов (для <code>merge()</code> тоже полезно, для понимания аргументов all.x, all.y)</p>
+<p><img src="pics/8_joins.jpg" width="75%"></p>
+<p><br>
+<br></p>
+</div>
+</div>
+<div id="r-connectors" class="section level2 unnumbered hasAnchor">
+<h2>r connectors<a href="sql.html#r-connectors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Для подключения из R используется пакет <code>RPostgreSQL</code>. С помощью функции <code>dbConnect()</code>, куда аоргументами передаются параметры подключения, создается объект-коннектор.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="sql.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RPostgreSQL)</span>
+<span id="cb45-2"><a href="sql.html#cb45-2" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(<span class="fu">PostgreSQL</span>(<span class="at">max.con =</span> <span class="dv">100</span>),</span>
+<span id="cb45-3"><a href="sql.html#cb45-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">user =</span> <span class="st">&quot;student&quot;</span>,</span>
+<span id="cb45-4"><a href="sql.html#cb45-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">password =</span> <span class="st">&quot;pmsar2018&quot;</span>,</span>
+<span id="cb45-5"><a href="sql.html#cb45-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">dbname =</span> <span class="st">&quot;pmsar&quot;</span>,</span>
+<span id="cb45-6"><a href="sql.html#cb45-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">host =</span> <span class="st">&quot;188.225.77.95&quot;</span>,</span>
+<span id="cb45-7"><a href="sql.html#cb45-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">port =</span> <span class="dv">5432</span>)</span></code></pre></div>
+<p>Запросы же делаются с помощью функции <code>dbGetQuery()</code> (простая функция для селектов, есть также отдельные функции для операций над таблицами). Первый аргумент функции - объект-коннектор, второй - строковая запись запроса. Нередко удобнее строку запроса записывать в отдельный объект:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="sql.html#cb46-1" aria-hidden="true" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">&quot;</span></span>
+<span id="cb46-2"><a href="sql.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="st">  select</span></span>
+<span id="cb46-3"><a href="sql.html#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="st">    name,</span></span>
+<span id="cb46-4"><a href="sql.html#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="st">    height,</span></span>
+<span id="cb46-5"><a href="sql.html#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="st">    planet_name</span></span>
+<span id="cb46-6"><a href="sql.html#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="st">  from public.chars</span></span>
+<span id="cb46-7"><a href="sql.html#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="st">  limit 3</span></span>
+<span id="cb46-8"><a href="sql.html#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span></span>
+<span id="cb46-9"><a href="sql.html#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="sql.html#cb46-10" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn =</span> con, <span class="at">statement =</span> query)</span>
+<span id="cb46-11"><a href="sql.html#cb46-11" aria-hidden="true" tabindex="-1"></a>res</span></code></pre></div>
+<pre><code>##             name height planet_name
+## 1 Luke Skywalker    172    Tatooine
+## 2          C-3PO    167    Tatooine
+## 3    Darth Vader    202    Tatooine</code></pre>
+<p>Результат выполнения выражения - объект класса data.frame. То есть, его в дальнейшем желательно переконвертировать в data.table:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="sql.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(res)</span></code></pre></div>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<p>После завершения работы (в идеале-после каждого запроса) соединение с базой надо закрывать:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="sql.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p><br></p>
+<div id="подключение-и-просмотр-бд-из-rstudio" class="section level3 unnumbered hasAnchor">
+<h3>Подключение и просмотр БД из RStudio<a href="sql.html#подключение-и-просмотр-бд-из-rstudio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>В последних версиях RStudio реализовано подключение к базам данных, просмотр таблиц и вызов чистых sql-запросов - аналогично DBeaver.</p>
+<p>Для этого необходимо установить пакет <code>odbc</code> и соответствующие драйверы подключений баз данных (подробнее см. <a href="https://db.rstudio.com/best-practices/drivers/">здесь</a>). Само создание подключения к PosgreSQL-базе данных выглядит аналогично подключению через пакет <code>RPostgreSQL</code>:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="sql.html#cb52-1" aria-hidden="true" tabindex="-1"></a>con_odbc <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(odbc<span class="sc">::</span><span class="fu">odbc</span>(),</span>
+<span id="cb52-2"><a href="sql.html#cb52-2" aria-hidden="true" tabindex="-1"></a>                           <span class="co"># sudo apt-get install odbc-postgresql</span></span>
+<span id="cb52-3"><a href="sql.html#cb52-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Driver   =</span> <span class="st">&quot;PostgreSQL Unicode&quot;</span>,</span>
+<span id="cb52-4"><a href="sql.html#cb52-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Server   =</span> <span class="st">&quot;188.225.77.95&quot;</span>,</span>
+<span id="cb52-5"><a href="sql.html#cb52-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Database =</span> <span class="st">&quot;pmsar&quot;</span>,</span>
+<span id="cb52-6"><a href="sql.html#cb52-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">UID      =</span> <span class="st">&quot;student&quot;</span>,</span>
+<span id="cb52-7"><a href="sql.html#cb52-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">PWD      =</span> <span class="st">&quot;pmsar2018&quot;</span>,</span>
+<span id="cb52-8"><a href="sql.html#cb52-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Port     =</span> <span class="dv">5432</span>)</span></code></pre></div>
+<p>При этом в окне <code>Connections</code> (обычно в верхней правой части полей RStudio, где в <code>Environment</code> перечислены объекты в рабочем пространстве) появляются подключение и схемы базы данных, к которой совершено подключение. Схемы - раскрывающиеся списки, при клике выводятся все таблицы схемы.</p>
+<p>После того, как в RStudio произведено подключение таким образом, можно писать запросы в отдельных скриптах - для этого необходимо создать скрипт с расширением <code>sql</code> (например, File &gt; New file &gt; SQL script), а в первой строчке указать подключение, и потом нажать Preview или Ctrl+Shift+Enter:</p>
+<p><img src="pics/8_sql_odbc.png"></p>
+<p><br>
+<br></p>
+</div>
+</div>
+<div id="полезные-ссылки-1" class="section level2 unnumbered hasAnchor">
+<h2>Полезные ссылки<a href="sql.html#полезные-ссылки-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Гайды хорошего оформления sql-кода. Им необязательно следовать дословно, но все же желательно принимать во внимание. ТАк или иначе, самое главное - код должен быть лаконичным, опрятным и читабельным для коллег.</p>
+<ul>
+<li><p><a href="https://github.com/mattm/sql-style-guide">style guide</a> - я предпочитаю такой гайд, хотя он во многом может вызывать нарекания. В частности, операторы многие пишут заглавными буквами, так как это повышает их видимость в коде. Также в этом гайде критикуется разное выравнивание ключевых слов и названий таблиц (чтобы формировался “коридор”).</p></li>
+<li><p>второй <a href="https://www.sqlstyle.guide/ru/">гайд</a>, один из моих коллег старается ему следовать, например. Особенно осмысленно выглядит критика префиксов в названиях колонок.</p></li>
+<li><p>список <a href="https://www.datacamp.com/courses/tech:sql">онлайн-курсов по SQL</a> на DataCamp. Курсов, может быть, больше чем надо для реальной работы, но пройти базовые вполне можно.</p></li>
+<li><p>русскоязычный <a href="http://sql-ex.ru/">сайт-соревнование</a> по решению задачек на SQL, некоторые задачки могут быть достаточно хардкорны.</p></li>
+<li><p>еще один неплохой <a href="https://learndb.ru">ресурс</a> с задачками по PostgreSQL. На самом деле онлайн-учебников и курсов очень много.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="домашнее-задание-4" class="section level2 hasAnchor">
+<h2>Домашнее задание<a href="sql.html#домашнее-задание-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Все данные лежат в схеме fw.</p>
+<div id="level-1-iatytd-3" class="section level3 hasAnchor">
+<h3>level 1 (IATYTD)<a href="sql.html#level-1-iatytd-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Подсчитать, сколько было установок всего по каждой платформе.</p>
+</div>
+<div id="level-2-hntr-6" class="section level3 hasAnchor">
+<h3>level 2 (HNTR)<a href="sql.html#level-2-hntr-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Посчитайте, сколько заплатили всего пользователи, пришедшие по каждому медиасорсу (вам надо сджойнить таблички платежей и табличку инсталлов)</p>
+</div>
+<div id="level-3-hmp-5" class="section level3 hasAnchor">
+<h3>level 3 (HMP)<a href="sql.html#level-3-hmp-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Повторите предыдущее задание, только ограничьте на lifetime &lt; 7 (дата инсталла есть и в таблички платежей. и в табличке инсталлов, которую будете джойнить)</p>
+</div>
+<div id="level-4-uv-5" class="section level3 hasAnchor">
+<h3>level 4 (UV)<a href="sql.html#level-4-uv-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Посчитайте ключевые метрики проекта за два месяца, в группировке по медиасорсам, возьмите lifetime &lt; 7.
+Метрики:</p>
+<ul>
+<li>total_users</li>
+<li>payers</li>
+<li>gross</li>
+<li>conversion</li>
+<li>ARPU</li>
+<li>ARPPU</li>
+<li>avg_price (AOV, средний платеж)</li>
+<li>avg_payment_count (APC, среднее количество платежей)</li>
+</ul>
+</div>
+<div id="level-5-n-5" class="section level3 hasAnchor">
+<h3>level 5 (N)<a href="sql.html#level-5-n-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Повторите предыдущее задание и добавьте строку Total (т.е. те же метрики, но без группировки по источникам трафика). Вам потребуется оператор union all.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ux.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "static"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
