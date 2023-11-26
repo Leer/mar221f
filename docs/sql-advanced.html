@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="ru-RU" xml:lang="ru-RU">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>SQL advanced | Методы анализа больших данных</title>
+  <meta name="description" content="SQL advanced | Методы анализа больших данных" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="SQL advanced | Методы анализа больших данных" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="SQL advanced | Методы анализа больших данных" />
+  
+  
+  
+
+<meta name="author" content="Ph.A.Upravitelev" />
+
+
+<meta name="date" content="2023-11-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="sql.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">mar 221f</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html"><i class="fa fa-check"></i>О курсе и аналитиках</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#запись-занятия"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#обо-мне"><i class="fa fa-check"></i>Обо мне</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#contacts"><i class="fa fa-check"></i>Contacts</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#о-курсе"><i class="fa fa-check"></i>О курсе</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#темы-лекций"><i class="fa fa-check"></i>темы лекций</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#факультативно"><i class="fa fa-check"></i>факультативно</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#формы-контроля"><i class="fa fa-check"></i>формы контроля</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#виды-аналитиков"><i class="fa fa-check"></i>Виды аналитиков</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#data-scientists"><i class="fa fa-check"></i>data scientists</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#web-аналитика"><i class="fa fa-check"></i>web-аналитика</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#маркетинговая-аналитика"><i class="fa fa-check"></i>маркетинговая аналитика</a></li>
+<li><a href="c1_intro.html#section" id="toc-section"></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#продуктовая-аналитика"><i class="fa fa-check"></i>Продуктовая аналитика</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#что-такое-продукт"><i class="fa fa-check"></i>что такое продукт</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#cxux-исследователи"><i class="fa fa-check"></i>CX/UX-исследователи</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#структура-команды-разработки"><i class="fa fa-check"></i>структура команды разработки</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#роли-продуктовых-аналитиков"><i class="fa fa-check"></i>роли продуктовых аналитиков</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#стадии-развития-продукта"><i class="fa fa-check"></i>Стадии развития продукта</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#этапы-жизни"><i class="fa fa-check"></i>этапы жизни</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#технические-этапы"><i class="fa fa-check"></i>технические этапы</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#бизнес-модели"><i class="fa fa-check"></i>Бизнес-модели</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#компоненты"><i class="fa fa-check"></i>компоненты</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#варианты"><i class="fa fa-check"></i>варианты</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#полезные-материалы"><i class="fa fa-check"></i>Полезные материалы</a></li>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#домашнее-задание"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="c1_intro.html"><a href="c1_intro.html#для-тех-кто-не-был-на-прошлом-курсе"><i class="fa fa-check"></i>Для тех, кто не был на прошлом курсе</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html"><i class="fa fa-check"></i>Метрики вовлечения pt1</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#запись-занятия-1"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#aarrr-фреймворк"><i class="fa fa-check"></i>AARRR фреймворк</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#user-aquisition"><i class="fa fa-check"></i>User Aquisition</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#процесс-привлечения-пользователей"><i class="fa fa-check"></i>Процесс привлечения пользователей</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#маркетинговая-воронка-в-мобильных-приложениях"><i class="fa fa-check"></i>Маркетинговая воронка в мобильных приложениях</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#новый-пользователь"><i class="fa fa-check"></i>Новый пользователь</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#активность-и-вовлечение"><i class="fa fa-check"></i>Активность и вовлечение</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#dau-wau-mau"><i class="fa fa-check"></i>DAU, WAU, MAU</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#stickness-sticky-factor"><i class="fa fa-check"></i>Stickness / Sticky factor</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#retention-rate"><i class="fa fa-check"></i>Retention rate</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#churn-rate"><i class="fa fa-check"></i>Churn rate</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#sessions-per-day"><i class="fa fa-check"></i>Sessions per day</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#полезные-материалы-1"><i class="fa fa-check"></i>Полезные материалы</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#домашнее-задание-1"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-1-iatytd"><i class="fa fa-check"></i>level 1 (IATYTD)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-2-hntr"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-3-hmp"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-4-uv"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt1.html"><a href="метрики-вовлечения-pt1.html#level-5-n"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html"><i class="fa fa-check"></i>Метрики вовлечения pt2</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#запись-занятия-2"><i class="fa fa-check"></i>Запись занятия</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-2-hntr-1"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-4-uv-1"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-5-n-1"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#расчет-retention"><i class="fa fa-check"></i>Расчет retention</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#домашнее-задание-2"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-1-iatytd-1"><i class="fa fa-check"></i>level 1 (IATYTD)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-2-hntr-2"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-3-hmp-1"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-4-uv-2"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="метрики-вовлечения-pt2.html"><a href="метрики-вовлечения-pt2.html#level-5-n-2"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html"><i class="fa fa-check"></i>Метрики монетизации pt.1</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#запись-занятия-3"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#разбор-домашнего-задания"><i class="fa fa-check"></i>Разбор домашнего задания</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-2-hntr-3"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-3-hmp-2"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-4-uv-3"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-5-n-3"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#платежные-метрики"><i class="fa fa-check"></i>Платежные метрики</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#gross-net"><i class="fa fa-check"></i>Gross / Net</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#конверсия"><i class="fa fa-check"></i>Конверсия</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#полезные-материалы-2"><i class="fa fa-check"></i>Полезные материалы</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#домашнее-задание-3"><i class="fa fa-check"></i>Домашнее задание</a>
+<ul>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-1-iatytd-2"><i class="fa fa-check"></i>level 1 (IATYTD)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-2-hntr-4"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-3-hmp-3"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-4-uv-4"><i class="fa fa-check"></i>level 4 (UV)</a></li>
+<li class="chapter" data-level="" data-path="c4_monetization.html"><a href="c4_monetization.html#level-5-n-4"><i class="fa fa-check"></i>level 5 (N)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html"><i class="fa fa-check"></i>Метрики монетизации pt.2</a>
+<ul>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#запись-занятия-4"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#разбор-домашнего-задания-1"><i class="fa fa-check"></i>Разбор домашнего задания</a>
+<ul>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#level-2-hntr-5"><i class="fa fa-check"></i>level 2 (HNTR)</a></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#level-3-hmp-4"><i class="fa fa-check"></i>level 3 (HMP)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="c5_monetization.html"><a href="c5_monetization.html#воронка-платежей"><i class="fa fa-check"></i>Воронка платежей</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html"><i class="fa fa-check"></i>Метрики монетизации pt.3</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#запись-занятия-5"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#arpu-arppu"><i class="fa fa-check"></i>ARPU / ARPPU</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#задача-1-1"><i class="fa fa-check"></i>задача 1</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#ltv"><i class="fa fa-check"></i>LTV</a>
+<ul>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#задача-2-1"><i class="fa fa-check"></i>задача 2</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="метрики-монетизации-pt.html"><a href="метрики-монетизации-pt.html#полезные-материалы-3"><i class="fa fa-check"></i>Полезные материалы</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html"><i class="fa fa-check"></i>Unit-экономика</a>
+<ul>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#запись-занятия-6"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#unit-экономика-1"><i class="fa fa-check"></i>Unit-экономика</a>
+<ul>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#что-это-и-зачем"><i class="fa fa-check"></i>Что это и зачем</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#юниты-масштабирования"><i class="fa fa-check"></i>Юниты масштабирования</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#основные-термины"><i class="fa fa-check"></i>Основные термины</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#пример"><i class="fa fa-check"></i>Пример</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#шаблоны-расчета"><i class="fa fa-check"></i>Шаблоны расчета</a></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#unit-экономика-для-аналитиков"><i class="fa fa-check"></i>Unit-экономика для аналитиков</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="unit-экономика.html"><a href="unit-экономика.html#дополнительные-материалы"><i class="fa fa-check"></i>Дополнительные материалы</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html"><i class="fa fa-check"></i>Homework 1</a>
+<ul>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#общие-замечания"><i class="fa fa-check"></i>Общие замечания</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#описание-данных"><i class="fa fa-check"></i>Описание данных</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-1"><i class="fa fa-check"></i>Задание 1</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-2"><i class="fa fa-check"></i>Задание 2</a>
+<ul>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#описание-приложения"><i class="fa fa-check"></i>Описание приложения</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#changelog-изменения-в-функционале-и-исправления-ошибок"><i class="fa fa-check"></i>Changelog (изменения в функционале и исправления ошибок):</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание"><i class="fa fa-check"></i>Задание</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-3"><i class="fa fa-check"></i>Задание 3</a></li>
+<li class="chapter" data-level="" data-path="homework-1.html"><a href="homework-1.html#задание-4"><i class="fa fa-check"></i>Задание 4</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="ux.html"><a href="ux.html"><i class="fa fa-check"></i>UX intro</a>
+<ul>
+<li class="chapter" data-level="" data-path="ux.html"><a href="ux.html#запись-занятия-7"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="ux.html"><a href="ux.html#полезные-ссылки"><i class="fa fa-check"></i>Полезные ссылки</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html"><i class="fa fa-check"></i>SQL</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#запись-занятия-8"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#dbeaver"><i class="fa fa-check"></i>DBeaver</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#параметры-подключений"><i class="fa fa-check"></i>Параметры подключений</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#sql-1"><i class="fa fa-check"></i>SQL</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#main-structure"><i class="fa fa-check"></i>main structure</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#simple-query"><i class="fa fa-check"></i>simple query</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#select-columns-selection"><i class="fa fa-check"></i>select: columns selection</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#where-rows-selection"><i class="fa fa-check"></i>where: rows selection</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#group-by-aggregations"><i class="fa fa-check"></i>group by: aggregations</a></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#join"><i class="fa fa-check"></i>join</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#r-connectors"><i class="fa fa-check"></i>r connectors</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#подключение-и-просмотр-бд-из-rstudio"><i class="fa fa-check"></i>Подключение и просмотр БД из RStudio</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql.html"><a href="sql.html#полезные-ссылки-1"><i class="fa fa-check"></i>Полезные ссылки</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html"><i class="fa fa-check"></i>SQL advanced</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#запись-занятия-9"><i class="fa fa-check"></i>Запись занятия</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#части-sql"><i class="fa fa-check"></i>Части SQL</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#data-definition-language"><i class="fa fa-check"></i>Data Definition Language</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#data-manipulation-language"><i class="fa fa-check"></i>Data Manipulation Language</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#data-control-language"><i class="fa fa-check"></i>Data Control Language</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#transaction-control-language"><i class="fa fa-check"></i>Transaction Control Language</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#data-types"><i class="fa fa-check"></i>data types</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#list"><i class="fa fa-check"></i>list</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#numeric-types"><i class="fa fa-check"></i>Numeric types</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#character-types"><i class="fa fa-check"></i>Character Types</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#datetime-types"><i class="fa fa-check"></i>Date/Time Types</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#type-conversion"><i class="fa fa-check"></i>type Conversion</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#values"><i class="fa fa-check"></i>values</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#subquery"><i class="fa fa-check"></i>subquery</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#common-tables-expressions"><i class="fa fa-check"></i>Common tables expressions</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#select-experiments"><i class="fa fa-check"></i>select experiments</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#functions"><i class="fa fa-check"></i>functions</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#case"><i class="fa fa-check"></i>case</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#filter"><i class="fa fa-check"></i>filter</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#window-functions"><i class="fa fa-check"></i>Window functions</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#row_number-over"><i class="fa fa-check"></i>row_number() over ()</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#over-partition-by"><i class="fa fa-check"></i>over (partition by)</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#total-sum"><i class="fa fa-check"></i>total sum</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#cumulative-sum"><i class="fa fa-check"></i>cumulative sum</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#explain"><i class="fa fa-check"></i>explain</a>
+<ul>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#plan"><i class="fa fa-check"></i>plan</a></li>
+<li class="chapter" data-level="" data-path="sql-advanced.html"><a href="sql-advanced.html#analyze"><i class="fa fa-check"></i>analyze</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Методы анализа больших данных</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="sql-advanced" class="section level1 unnumbered hasAnchor">
+<h1>SQL advanced<a href="sql-advanced.html#sql-advanced" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="запись-занятия-9" class="section level2 unnumbered hasAnchor">
+<h2>Запись занятия<a href="sql-advanced.html#запись-занятия-9" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/s7zZc-F3ENQ?si=Y3fpPBF71MqjmPJB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+</div>
+<div id="части-sql" class="section level2 unnumbered hasAnchor">
+<h2>Части SQL<a href="sql-advanced.html#части-sql" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="data-definition-language" class="section level3 unnumbered hasAnchor">
+<h3>Data Definition Language<a href="sql-advanced.html#data-definition-language" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Набор команд для работы с объектами базы данных. С помощью этих команд можно создать, удалить или изменить какой-нибудь объект: таблицу, схему, функцию и т. д. Как правило для этих команд требуются дополнительные права пользователей.</p>
+<p>CREATE – для создания объектов базы данных
+ALTER – для изменения объектов базы данных
+DROP – для удаления объектов базы данных</p>
+</div>
+<div id="data-manipulation-language" class="section level3 unnumbered hasAnchor">
+<h3>Data Manipulation Language<a href="sql-advanced.html#data-manipulation-language" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Набор команд для работы с данными - выбор данных (из таблицы или таблиц), добавление или изменение данных, удаление данных (обычно строк из таблицы, сама таблица при этом остается на месте - для ее удаления нужно сделать DROP TABLE).</p>
+<p>SELECT – выборка данных
+INSERT – добавляет новые данные
+UPDATE – изменяет существующие данные
+DELETE – удаляет данные</p>
+</div>
+<div id="data-control-language" class="section level3 unnumbered hasAnchor">
+<h3>Data Control Language<a href="sql-advanced.html#data-control-language" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Организация и контроль над доступом к базе данных. Например, службе дашборда надо выдать права на чтение данных.</p>
+<p>GRANT – предоставляет пользователю или группе разрешения на определённые операции с объектом
+REVOKE – отзывает выданные разрешения
+DENY – задаёт запрет, имеющий приоритет над разрешением</p>
+</div>
+<div id="transaction-control-language" class="section level3 unnumbered hasAnchor">
+<h3>Transaction Control Language<a href="sql-advanced.html#transaction-control-language" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Команды для работы с транзакциями (группами запросов, которые выполняются пакетно, чтобы не было неконсистетности в данных). Обычно аналитики с такими задачами не сталкиваются.</p>
+<p>BEGIN – служит для определения начала транзакции
+COMMIT – применяет транзакцию
+ROLLBACK – откатывает все изменения, сделанные в контексте текущей транзакции
+SAVEPOINT – устанавливает промежуточную точку сохранения внутри транзакции</p>
+</div>
+</div>
+<div id="data-types" class="section level2 unnumbered hasAnchor">
+<h2>data types<a href="sql-advanced.html#data-types" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="list" class="section level3 unnumbered hasAnchor">
+<h3>list<a href="sql-advanced.html#list" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>В PostgreSQL (как и в других диалектах) есть большой набор разных типов данных, от стандартных (целые числа, с дробной частью, с плавающей точкой, строки, даты) до экзотических типа ip-адресов. Подробный список типов можно посмотреть вот здесь: <a href="https://www.postgresql.org/docs/current/sql.html">8. Data Types</a>:</p>
+<p>8.1. Numeric Types
+8.2. Monetary Types
+8.3. Character Types
+8.4. Binary Data Types
+8.5. Date/Time Types
+8.6. Boolean Type
+8.7. Enumerated Types
+8.8. Geometric Types
+8.9. Network Address Types
+8.10. Bit String Types
+8.11. Text Search Types
+8.12. UUID Type
+8.13. XML Type
+8.14. JSON Types
+8.15. Arrays
+8.16. Composite Types
+8.17. Range Types
+8.18. Domain Types
+8.19. Object Identifier Types
+8.20. pg_lsn Type
+8.21. Pseudo-Types</p>
+</div>
+<div id="numeric-types" class="section level3 unnumbered hasAnchor">
+<h3>Numeric types<a href="sql-advanced.html#numeric-types" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>При работе с числовыми типами надо помнить о такой особенности, что целые числа и числа с дробью - это разные типы. И, например, при делении целого числа на целое SQL вернет также целое число (в R будет неявное преобращование типа):</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb53-1"><a href="sql-advanced.html#cb53-1" tabindex="-1"></a><span class="kw">select</span> <span class="dv">1</span> <span class="op">/</span> <span class="dv">7</span>, <span class="dv">7</span> <span class="op">/</span> <span class="dv">3</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-1">Table 1: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">?column?</th>
+<th align="right">?column?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Один из самых простых вариантов явного преобразования - умножить целое число с типом numeric (то есть, на 1.000):</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb54-1"><a href="sql-advanced.html#cb54-1" tabindex="-1"></a><span class="kw">select</span> <span class="dv">1</span> <span class="op">*</span> <span class="fl">1.000</span> <span class="op">/</span> <span class="dv">7</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 2: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">?column?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1428571</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="character-types" class="section level3 unnumbered hasAnchor">
+<h3>Character Types<a href="sql-advanced.html#character-types" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Строковые типы, такие же как и в других языках программирования.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb55-1"><a href="sql-advanced.html#cb55-1" tabindex="-1"></a><span class="kw">select</span> <span class="st">&#39;abc&#39;</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 3: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">?column?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">abc</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Из полезных функций - конкатенация (слияние строк, аналог <code>paste0()</code> в R) и изменение регистра.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb56-1"><a href="sql-advanced.html#cb56-1" tabindex="-1"></a><span class="kw">select</span> <span class="st">&#39;a&#39;</span> <span class="op">||</span> <span class="st">&#39;b&#39;</span>, <span class="fu">upper</span>(<span class="st">&#39;abc&#39;</span>), <span class="fu">lower</span>(<span class="st">&#39;ABC&#39;</span>)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 4: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">?column?</th>
+<th align="left">upper</th>
+<th align="left">lower</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ab</td>
+<td align="left">ABC</td>
+<td align="left">abc</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Для работы со строковыми данными есть большая группа функций, использующих регулярные выражения. Вообще, регулярные выражения - весьма часто встречающаяся в жизни аналитиков вещь и их стоит освоить.</p>
+</div>
+<div id="datetime-types" class="section level3 unnumbered hasAnchor">
+<h3>Date/Time Types<a href="sql-advanced.html#datetime-types" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Даты и время. Несмотря на то, что для для людей более читабельны даты и время в ISO-представлении (‘гггг-мм-дд чч:мм:сс’), лучше использовать unix-timestamp – представление даты в виде количества секнуд с 1970-01-01. Это представление проще, удобнее для хранения, не зависит от таймзоны пользователя и базы данных.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb57-1"><a href="sql-advanced.html#cb57-1" tabindex="-1"></a><span class="co">--текущая дата</span></span>
+<span id="cb57-2"><a href="sql-advanced.html#cb57-2" tabindex="-1"></a><span class="kw">select</span> <span class="fu">current_date</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-5">Table 5: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2023-11-26</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Для преобразования даты в unix-timestamp используют функцию <code>extract()</code> с указанием, что извлекается <code>epoch</code>.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb58-1"><a href="sql-advanced.html#cb58-1" tabindex="-1"></a><span class="kw">select</span> <span class="fu">extract</span>(epoch <span class="kw">from</span> <span class="fu">current_date</span>)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 6: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">date_part</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1700956800</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Обратное преобразование с помощью <code>to_timestamp()</code>:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb59-1"><a href="sql-advanced.html#cb59-1" tabindex="-1"></a><span class="kw">select</span> <span class="fu">to_timestamp</span>(<span class="dv">1636156800</span>)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-7">Table 7: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">to_timestamp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2021-11-06 03:00:00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Даты вычитать достаточно просто, date - date. Но если надо из даты вычесть количество дней / месяцев / лет (или другой интервал), то можно воспользоваться следующей конструкцией:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb60-1"><a href="sql-advanced.html#cb60-1" tabindex="-1"></a><span class="kw">select</span> <span class="fu">current_date</span> <span class="op">-</span> <span class="dt">interval</span> <span class="st">&#39;1&#39;</span> <span class="dt">day</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-8">Table 8: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">?column?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2023-11-25</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="type-conversion" class="section level3 unnumbered hasAnchor">
+<h3>type Conversion<a href="sql-advanced.html#type-conversion" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Для преобразования типов в Postgresql обычно используют <code>::</code>, также есть более классическая и распространенная во всех диалектах функция <code>cast()</code>:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb61-1"><a href="sql-advanced.html#cb61-1" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb61-2"><a href="sql-advanced.html#cb61-2" tabindex="-1"></a>  <span class="dv">1</span> <span class="op">*</span> <span class="fl">1.000</span> <span class="op">/</span> <span class="dv">7</span>, </span>
+<span id="cb61-3"><a href="sql-advanced.html#cb61-3" tabindex="-1"></a>  <span class="dv">1</span> :: <span class="dt">numeric</span> <span class="op">/</span> <span class="dv">7</span>,</span>
+<span id="cb61-4"><a href="sql-advanced.html#cb61-4" tabindex="-1"></a>  <span class="fu">cast</span>(<span class="dv">1</span> <span class="kw">as</span> <span class="dt">numeric</span>) <span class="op">/</span> <span class="dv">7</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-9">Table 9: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">?column?</th>
+<th align="right">?column?</th>
+<th align="right">?column?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1428571</td>
+<td align="right">0.1428571</td>
+<td align="right">0.1428571</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="values" class="section level2 unnumbered hasAnchor">
+<h2>values<a href="sql-advanced.html#values" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Иногда бывают ситуации, когда надо создать таблицу в запросе - для этого можно с помощью команды values вычислить набор строк, в которых заданы значения (количество значений в строках должно быть одинаковыми). Названия колонок в создаваемой таблице можно задать с помощью as tablename(col1_name, col2_name…), по количеству создаваемых колонок.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb62-1"><a href="sql-advanced.html#cb62-1" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb62-2"><a href="sql-advanced.html#cb62-2" tabindex="-1"></a>    <span class="op">*</span> </span>
+<span id="cb62-3"><a href="sql-advanced.html#cb62-3" tabindex="-1"></a><span class="kw">from</span> (</span>
+<span id="cb62-4"><a href="sql-advanced.html#cb62-4" tabindex="-1"></a>    <span class="kw">values</span> </span>
+<span id="cb62-5"><a href="sql-advanced.html#cb62-5" tabindex="-1"></a>        (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb62-6"><a href="sql-advanced.html#cb62-6" tabindex="-1"></a>        (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>)</span>
+<span id="cb62-7"><a href="sql-advanced.html#cb62-7" tabindex="-1"></a>) <span class="kw">as</span> tbl(var1, var2, var3)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-10">Table 10: </span>2 records</caption>
+<thead>
+<tr class="header">
+<th align="left">var1</th>
+<th align="left">var2</th>
+<th align="left">var3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">a</td>
+<td align="left">grp1</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">b</td>
+<td align="left">grp1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="subquery" class="section level2 unnumbered hasAnchor">
+<h2>subquery<a href="sql-advanced.html#subquery" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Нередко в запросах надо обратиться к подвыборке из другой таблицы. Например, это может быть как в разделе join:</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb63-1"><a href="sql-advanced.html#cb63-1" tabindex="-1"></a><span class="kw">select</span> </span>
+<span id="cb63-2"><a href="sql-advanced.html#cb63-2" tabindex="-1"></a>    <span class="op">*</span> </span>
+<span id="cb63-3"><a href="sql-advanced.html#cb63-3" tabindex="-1"></a><span class="co">-- создаем и обращаемся к первой таблице</span></span>
+<span id="cb63-4"><a href="sql-advanced.html#cb63-4" tabindex="-1"></a><span class="kw">from</span> (</span>
+<span id="cb63-5"><a href="sql-advanced.html#cb63-5" tabindex="-1"></a>    <span class="kw">values</span> </span>
+<span id="cb63-6"><a href="sql-advanced.html#cb63-6" tabindex="-1"></a>        (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb63-7"><a href="sql-advanced.html#cb63-7" tabindex="-1"></a>        (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>)</span>
+<span id="cb63-8"><a href="sql-advanced.html#cb63-8" tabindex="-1"></a>) <span class="kw">as</span> tbl(var1, var2, var3)</span>
+<span id="cb63-9"><a href="sql-advanced.html#cb63-9" tabindex="-1"></a><span class="co">-- создаем и джойним вторую таблицу</span></span>
+<span id="cb63-10"><a href="sql-advanced.html#cb63-10" tabindex="-1"></a><span class="kw">left</span> <span class="kw">join</span> (</span>
+<span id="cb63-11"><a href="sql-advanced.html#cb63-11" tabindex="-1"></a>  <span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> (</span>
+<span id="cb63-12"><a href="sql-advanced.html#cb63-12" tabindex="-1"></a>    <span class="kw">values</span> </span>
+<span id="cb63-13"><a href="sql-advanced.html#cb63-13" tabindex="-1"></a>        (<span class="st">&#39;2021-11-06&#39;</span>, <span class="st">&#39;grp1&#39;</span>)      </span>
+<span id="cb63-14"><a href="sql-advanced.html#cb63-14" tabindex="-1"></a>  ) <span class="kw">as</span> tb2(var4, var3)</span>
+<span id="cb63-15"><a href="sql-advanced.html#cb63-15" tabindex="-1"></a>) <span class="kw">as</span> t2 <span class="kw">using</span>(var3)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-11">Table 11: </span>2 records</caption>
+<thead>
+<tr class="header">
+<th align="left">var3</th>
+<th align="right">var1</th>
+<th align="left">var2</th>
+<th align="left">var4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">grp1</td>
+<td align="right">1</td>
+<td align="left">a</td>
+<td align="left">2021-11-06</td>
+</tr>
+<tr class="even">
+<td align="left">grp1</td>
+<td align="right">2</td>
+<td align="left">b</td>
+<td align="left">2021-11-06</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Более простой пример с уже существующими таблицами:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb64-1"><a href="sql-advanced.html#cb64-1" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb64-2"><a href="sql-advanced.html#cb64-2" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb64-3"><a href="sql-advanced.html#cb64-3" tabindex="-1"></a><span class="kw">from</span> chars</span>
+<span id="cb64-4"><a href="sql-advanced.html#cb64-4" tabindex="-1"></a><span class="kw">left</span> <span class="kw">join</span> (</span>
+<span id="cb64-5"><a href="sql-advanced.html#cb64-5" tabindex="-1"></a>    <span class="kw">select</span> planet_name, gravity</span>
+<span id="cb64-6"><a href="sql-advanced.html#cb64-6" tabindex="-1"></a>    <span class="kw">from</span> planets</span>
+<span id="cb64-7"><a href="sql-advanced.html#cb64-7" tabindex="-1"></a>    <span class="kw">where</span> climate <span class="op">=</span> <span class="st">&#39;temperate&#39;</span></span>
+<span id="cb64-8"><a href="sql-advanced.html#cb64-8" tabindex="-1"></a>) <span class="kw">as</span> p <span class="kw">using</span>(planet_name)</span></code></pre></div>
+<div class="knitsql-table">
+<table style="width:100%;">
+<caption><span id="tab:unnamed-chunk-12">Table 12: </span>Displaying records 1 - 10</caption>
+<colgroup>
+<col width="8%" />
+<col width="6%" />
+<col width="13%" />
+<col width="4%" />
+<col width="3%" />
+<col width="8%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="4%" />
+<col width="22%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">planet_name</th>
+<th align="left">row.names</th>
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="right">mass</th>
+<th align="left">hair_color</th>
+<th align="left">skin_color</th>
+<th align="left">eye_color</th>
+<th align="left">birth_year</th>
+<th align="left">gender</th>
+<th align="left">url</th>
+<th align="left">gravity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Tatooine</td>
+<td align="left">1</td>
+<td align="left">Luke Skywalker</td>
+<td align="right">172</td>
+<td align="right">77</td>
+<td align="left">blond</td>
+<td align="left">fair</td>
+<td align="left">blue</td>
+<td align="left">19BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/1/" class="uri">https://swapi.co/api/people/1/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Tatooine</td>
+<td align="left">2</td>
+<td align="left">C-3PO</td>
+<td align="right">167</td>
+<td align="right">75</td>
+<td align="left">n/a</td>
+<td align="left">gold</td>
+<td align="left">yellow</td>
+<td align="left">112BBY</td>
+<td align="left">n/a</td>
+<td align="left"><a href="https://swapi.co/api/people/2/" class="uri">https://swapi.co/api/people/2/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Tatooine</td>
+<td align="left">3</td>
+<td align="left">Darth Vader</td>
+<td align="right">202</td>
+<td align="right">136</td>
+<td align="left">none</td>
+<td align="left">white</td>
+<td align="left">yellow</td>
+<td align="left">41.9BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/4/" class="uri">https://swapi.co/api/people/4/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Tatooine</td>
+<td align="left">4</td>
+<td align="left">Owen Lars</td>
+<td align="right">178</td>
+<td align="right">120</td>
+<td align="left">brown, grey</td>
+<td align="left">light</td>
+<td align="left">blue</td>
+<td align="left">52BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/6/" class="uri">https://swapi.co/api/people/6/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Tatooine</td>
+<td align="left">5</td>
+<td align="left">Beru Whitesun lars</td>
+<td align="right">165</td>
+<td align="right">75</td>
+<td align="left">brown</td>
+<td align="left">light</td>
+<td align="left">blue</td>
+<td align="left">47BBY</td>
+<td align="left">female</td>
+<td align="left"><a href="https://swapi.co/api/people/7/" class="uri">https://swapi.co/api/people/7/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Tatooine</td>
+<td align="left">6</td>
+<td align="left">R5-D4</td>
+<td align="right">97</td>
+<td align="right">32</td>
+<td align="left">n/a</td>
+<td align="left">white, red</td>
+<td align="left">red</td>
+<td align="left">unknown</td>
+<td align="left">n/a</td>
+<td align="left"><a href="https://swapi.co/api/people/8/" class="uri">https://swapi.co/api/people/8/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Tatooine</td>
+<td align="left">7</td>
+<td align="left">Biggs Darklighter</td>
+<td align="right">183</td>
+<td align="right">84</td>
+<td align="left">black</td>
+<td align="left">light</td>
+<td align="left">brown</td>
+<td align="left">24BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/9/" class="uri">https://swapi.co/api/people/9/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Tatooine</td>
+<td align="left">8</td>
+<td align="left">Anakin Skywalker</td>
+<td align="right">188</td>
+<td align="right">84</td>
+<td align="left">blond</td>
+<td align="left">fair</td>
+<td align="left">blue</td>
+<td align="left">41.9BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/11/" class="uri">https://swapi.co/api/people/11/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Tatooine</td>
+<td align="left">9</td>
+<td align="left">Shmi Skywalker</td>
+<td align="right">163</td>
+<td align="right">NA</td>
+<td align="left">black</td>
+<td align="left">fair</td>
+<td align="left">brown</td>
+<td align="left">72BBY</td>
+<td align="left">female</td>
+<td align="left"><a href="https://swapi.co/api/people/43/" class="uri">https://swapi.co/api/people/43/</a></td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Tatooine</td>
+<td align="left">10</td>
+<td align="left">Cliegg Lars</td>
+<td align="right">183</td>
+<td align="right">NA</td>
+<td align="left">brown</td>
+<td align="left">fair</td>
+<td align="left">blue</td>
+<td align="left">82BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/62/" class="uri">https://swapi.co/api/people/62/</a></td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Также вложенные запросы могут быть в блоке <code>where</code>:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb65-1"><a href="sql-advanced.html#cb65-1" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb65-2"><a href="sql-advanced.html#cb65-2" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb65-3"><a href="sql-advanced.html#cb65-3" tabindex="-1"></a><span class="kw">from</span> chars</span>
+<span id="cb65-4"><a href="sql-advanced.html#cb65-4" tabindex="-1"></a><span class="kw">where</span> planet_name <span class="kw">in</span> (</span>
+<span id="cb65-5"><a href="sql-advanced.html#cb65-5" tabindex="-1"></a>    <span class="kw">select</span> planet_name <span class="kw">from</span> planets <span class="kw">where</span> climate <span class="op">=</span> <span class="st">&#39;temperate&#39;</span></span>
+<span id="cb65-6"><a href="sql-advanced.html#cb65-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-13">Table 13: </span>Displaying records 1 - 10</caption>
+<colgroup>
+<col width="6%" />
+<col width="14%" />
+<col width="4%" />
+<col width="3%" />
+<col width="9%" />
+<col width="11%" />
+<col width="6%" />
+<col width="7%" />
+<col width="9%" />
+<col width="20%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">row.names</th>
+<th align="left">name</th>
+<th align="right">height</th>
+<th align="right">mass</th>
+<th align="left">hair_color</th>
+<th align="left">skin_color</th>
+<th align="left">eye_color</th>
+<th align="left">birth_year</th>
+<th align="left">gender</th>
+<th align="left">url</th>
+<th align="left">planet_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">Boba Fett</td>
+<td align="right">183</td>
+<td align="right">78.2</td>
+<td align="left">black</td>
+<td align="left">fair</td>
+<td align="left">brown</td>
+<td align="left">31.5BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/22/" class="uri">https://swapi.co/api/people/22/</a></td>
+<td align="left">Kamino</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">Lama Su</td>
+<td align="right">229</td>
+<td align="right">88.0</td>
+<td align="left">none</td>
+<td align="left">grey</td>
+<td align="left">black</td>
+<td align="left">unknown</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/72/" class="uri">https://swapi.co/api/people/72/</a></td>
+<td align="left">Kamino</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">Taun We</td>
+<td align="right">213</td>
+<td align="right">NA</td>
+<td align="left">none</td>
+<td align="left">grey</td>
+<td align="left">black</td>
+<td align="left">unknown</td>
+<td align="left">female</td>
+<td align="left"><a href="https://swapi.co/api/people/73/" class="uri">https://swapi.co/api/people/73/</a></td>
+<td align="left">Kamino</td>
+</tr>
+<tr class="even">
+<td align="left">19</td>
+<td align="left">Leia Organa</td>
+<td align="right">150</td>
+<td align="right">49.0</td>
+<td align="left">brown</td>
+<td align="left">light</td>
+<td align="left">brown</td>
+<td align="left">19BBY</td>
+<td align="left">female</td>
+<td align="left"><a href="https://swapi.co/api/people/5/" class="uri">https://swapi.co/api/people/5/</a></td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="odd">
+<td align="left">20</td>
+<td align="left">Bail Prestor Organa</td>
+<td align="right">191</td>
+<td align="right">NA</td>
+<td align="left">black</td>
+<td align="left">tan</td>
+<td align="left">brown</td>
+<td align="left">67BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/68/" class="uri">https://swapi.co/api/people/68/</a></td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="even">
+<td align="left">21</td>
+<td align="left">Raymus Antilles</td>
+<td align="right">188</td>
+<td align="right">79.0</td>
+<td align="left">brown</td>
+<td align="left">light</td>
+<td align="left">brown</td>
+<td align="left">unknown</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/81/" class="uri">https://swapi.co/api/people/81/</a></td>
+<td align="left">Alderaan</td>
+</tr>
+<tr class="odd">
+<td align="left">22</td>
+<td align="left">Obi-Wan Kenobi</td>
+<td align="right">182</td>
+<td align="right">77.0</td>
+<td align="left">auburn, white</td>
+<td align="left">fair</td>
+<td align="left">blue-gray</td>
+<td align="left">57BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/10/" class="uri">https://swapi.co/api/people/10/</a></td>
+<td align="left">Stewjon</td>
+</tr>
+<tr class="even">
+<td align="left">24</td>
+<td align="left">Han Solo</td>
+<td align="right">180</td>
+<td align="right">80.0</td>
+<td align="left">brown</td>
+<td align="left">fair</td>
+<td align="left">brown</td>
+<td align="left">29BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/14/" class="uri">https://swapi.co/api/people/14/</a></td>
+<td align="left">Corellia</td>
+</tr>
+<tr class="odd">
+<td align="left">25</td>
+<td align="left">Wedge Antilles</td>
+<td align="right">170</td>
+<td align="right">77.0</td>
+<td align="left">brown</td>
+<td align="left">fair</td>
+<td align="left">hazel</td>
+<td align="left">21BBY</td>
+<td align="left">male</td>
+<td align="left"><a href="https://swapi.co/api/people/18/" class="uri">https://swapi.co/api/people/18/</a></td>
+<td align="left">Corellia</td>
+</tr>
+<tr class="even">
+<td align="left">27</td>
+<td align="left">Jabba Desilijic Tiure</td>
+<td align="right">175</td>
+<td align="right">NA</td>
+<td align="left">n/a</td>
+<td align="left">green-tan, brown</td>
+<td align="left">orange</td>
+<td align="left">600BBY</td>
+<td align="left">hermaphrodite</td>
+<td align="left"><a href="https://swapi.co/api/people/16/" class="uri">https://swapi.co/api/people/16/</a></td>
+<td align="left">Nal Hutta</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="common-tables-expressions" class="section level2 unnumbered hasAnchor">
+<h2>Common tables expressions<a href="sql-advanced.html#common-tables-expressions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Общие таблицы или “выражения с with” – крайне полезный инструмент, так как позволяет создавать в запросе временные таблицы (которые живут только во время запроса и нигде не созраняются) и обращаться к этим таблицам во время запроса.</p>
+<p>Для экспериментов удобно совмещать создание таблиц из заданных значений с помощью values и операции с этими таблицами с помощью with:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb66-1"><a href="sql-advanced.html#cb66-1" tabindex="-1"></a><span class="co">-- указываем, что таблицы из запросов ниже будут временными и общими для всего запроса</span></span>
+<span id="cb66-2"><a href="sql-advanced.html#cb66-2" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb66-3"><a href="sql-advanced.html#cb66-3" tabindex="-1"></a>  <span class="co">-- создаем первую таблицу</span></span>
+<span id="cb66-4"><a href="sql-advanced.html#cb66-4" tabindex="-1"></a>    tmp1 <span class="kw">as</span> (</span>
+<span id="cb66-5"><a href="sql-advanced.html#cb66-5" tabindex="-1"></a>        <span class="kw">select</span> </span>
+<span id="cb66-6"><a href="sql-advanced.html#cb66-6" tabindex="-1"></a>            <span class="op">*</span> </span>
+<span id="cb66-7"><a href="sql-advanced.html#cb66-7" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb66-8"><a href="sql-advanced.html#cb66-8" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb66-9"><a href="sql-advanced.html#cb66-9" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb66-10"><a href="sql-advanced.html#cb66-10" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>)</span>
+<span id="cb66-11"><a href="sql-advanced.html#cb66-11" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(var1, var2, var3)</span>
+<span id="cb66-12"><a href="sql-advanced.html#cb66-12" tabindex="-1"></a>    ),</span>
+<span id="cb66-13"><a href="sql-advanced.html#cb66-13" tabindex="-1"></a>    <span class="co">-- создаем вторую таблицу</span></span>
+<span id="cb66-14"><a href="sql-advanced.html#cb66-14" tabindex="-1"></a>    tmp2 <span class="kw">as</span> (</span>
+<span id="cb66-15"><a href="sql-advanced.html#cb66-15" tabindex="-1"></a>    <span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> (</span>
+<span id="cb66-16"><a href="sql-advanced.html#cb66-16" tabindex="-1"></a>      <span class="kw">values</span> </span>
+<span id="cb66-17"><a href="sql-advanced.html#cb66-17" tabindex="-1"></a>        (<span class="st">&#39;2021-11-06&#39;</span>, <span class="st">&#39;grp1&#39;</span>)      </span>
+<span id="cb66-18"><a href="sql-advanced.html#cb66-18" tabindex="-1"></a>    ) <span class="kw">as</span> tb2(var4, var3)</span>
+<span id="cb66-19"><a href="sql-advanced.html#cb66-19" tabindex="-1"></a>    )</span>
+<span id="cb66-20"><a href="sql-advanced.html#cb66-20" tabindex="-1"></a>    </span>
+<span id="cb66-21"><a href="sql-advanced.html#cb66-21" tabindex="-1"></a><span class="co">--основная часть - пишем запрос к созданным таблицам</span></span>
+<span id="cb66-22"><a href="sql-advanced.html#cb66-22" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb66-23"><a href="sql-advanced.html#cb66-23" tabindex="-1"></a><span class="kw">from</span> tmp1</span>
+<span id="cb66-24"><a href="sql-advanced.html#cb66-24" tabindex="-1"></a><span class="kw">left</span> <span class="kw">join</span> tmp2 <span class="kw">using</span>(var3)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-14">Table 14: </span>2 records</caption>
+<thead>
+<tr class="header">
+<th align="left">var3</th>
+<th align="right">var1</th>
+<th align="left">var2</th>
+<th align="left">var4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">grp1</td>
+<td align="right">1</td>
+<td align="left">a</td>
+<td align="left">2021-11-06</td>
+</tr>
+<tr class="even">
+<td align="left">grp1</td>
+<td align="right">2</td>
+<td align="left">b</td>
+<td align="left">2021-11-06</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="select-experiments" class="section level2 unnumbered hasAnchor">
+<h2>select experiments<a href="sql-advanced.html#select-experiments" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="functions" class="section level3 unnumbered hasAnchor">
+<h3>functions<a href="sql-advanced.html#functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>В блоке select можно использовать разные, временами сложные конструкции. Самое простое - какая-то операция с колонкой, например, вычисление среднего (для среднего в sql-диалектах используется функция <code>avg()</code>) или максимума.</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb67-1"><a href="sql-advanced.html#cb67-1" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb67-2"><a href="sql-advanced.html#cb67-2" tabindex="-1"></a>    tmp <span class="kw">as</span> (</span>
+<span id="cb67-3"><a href="sql-advanced.html#cb67-3" tabindex="-1"></a>        <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb67-4"><a href="sql-advanced.html#cb67-4" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb67-5"><a href="sql-advanced.html#cb67-5" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb67-6"><a href="sql-advanced.html#cb67-6" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb67-7"><a href="sql-advanced.html#cb67-7" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>)</span>
+<span id="cb67-8"><a href="sql-advanced.html#cb67-8" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(v1, v2, v3)</span>
+<span id="cb67-9"><a href="sql-advanced.html#cb67-9" tabindex="-1"></a>    )</span>
+<span id="cb67-10"><a href="sql-advanced.html#cb67-10" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb67-11"><a href="sql-advanced.html#cb67-11" tabindex="-1"></a>    <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">as</span> n_rows,</span>
+<span id="cb67-12"><a href="sql-advanced.html#cb67-12" tabindex="-1"></a>    <span class="fu">count</span>(<span class="kw">distinct</span> v3) <span class="kw">as</span> n_groups,</span>
+<span id="cb67-13"><a href="sql-advanced.html#cb67-13" tabindex="-1"></a>    <span class="fu">avg</span>(v1) <span class="kw">as</span> v2_avg</span>
+<span id="cb67-14"><a href="sql-advanced.html#cb67-14" tabindex="-1"></a><span class="kw">from</span> tmp</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-15">Table 15: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">n_rows</th>
+<th align="right">n_groups</th>
+<th align="right">v2_avg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="case" class="section level3 unnumbered hasAnchor">
+<h3>case<a href="sql-advanced.html#case" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Немного более сложный, но очень полезный инструмент - оператор логического ветвления. В R это аналог switch или вложенных ifelse.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb68-1"><a href="sql-advanced.html#cb68-1" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb68-2"><a href="sql-advanced.html#cb68-2" tabindex="-1"></a>    tmp <span class="kw">as</span> (</span>
+<span id="cb68-3"><a href="sql-advanced.html#cb68-3" tabindex="-1"></a>        <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb68-4"><a href="sql-advanced.html#cb68-4" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb68-5"><a href="sql-advanced.html#cb68-5" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb68-6"><a href="sql-advanced.html#cb68-6" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb68-7"><a href="sql-advanced.html#cb68-7" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb68-8"><a href="sql-advanced.html#cb68-8" tabindex="-1"></a>                (<span class="dv">3</span>, <span class="kw">NULL</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb68-9"><a href="sql-advanced.html#cb68-9" tabindex="-1"></a>                (<span class="dv">4</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;grp2&#39;</span>),</span>
+<span id="cb68-10"><a href="sql-advanced.html#cb68-10" tabindex="-1"></a>                (<span class="dv">5</span>, <span class="st">&#39;e&#39;</span>, <span class="st">&#39;grp2&#39;</span>)</span>
+<span id="cb68-11"><a href="sql-advanced.html#cb68-11" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(v1, v2, v3)</span>
+<span id="cb68-12"><a href="sql-advanced.html#cb68-12" tabindex="-1"></a>    )</span>
+<span id="cb68-13"><a href="sql-advanced.html#cb68-13" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb68-14"><a href="sql-advanced.html#cb68-14" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb68-15"><a href="sql-advanced.html#cb68-15" tabindex="-1"></a>    <span class="co">-- открываем логическое ветвление</span></span>
+<span id="cb68-16"><a href="sql-advanced.html#cb68-16" tabindex="-1"></a>    <span class="cf">case</span> </span>
+<span id="cb68-17"><a href="sql-advanced.html#cb68-17" tabindex="-1"></a>      <span class="co">-- первое условие</span></span>
+<span id="cb68-18"><a href="sql-advanced.html#cb68-18" tabindex="-1"></a>        <span class="cf">when</span> v1 <span class="op">&lt;</span> <span class="dv">3</span> <span class="cf">then</span> <span class="st">&#39;g1&#39;</span></span>
+<span id="cb68-19"><a href="sql-advanced.html#cb68-19" tabindex="-1"></a>        <span class="co">-- второе условие</span></span>
+<span id="cb68-20"><a href="sql-advanced.html#cb68-20" tabindex="-1"></a>        <span class="cf">when</span> v1 <span class="op">=</span> <span class="dv">3</span> <span class="cf">then</span> <span class="st">&#39;g2&#39;</span></span>
+<span id="cb68-21"><a href="sql-advanced.html#cb68-21" tabindex="-1"></a>        <span class="co">-- третье условие - &quot;все прочее&quot;</span></span>
+<span id="cb68-22"><a href="sql-advanced.html#cb68-22" tabindex="-1"></a>        <span class="cf">else</span> <span class="st">&#39;g3&#39;</span></span>
+<span id="cb68-23"><a href="sql-advanced.html#cb68-23" tabindex="-1"></a>    <span class="co">-- закрываем ветвление и указываем, как назвать колонку</span></span>
+<span id="cb68-24"><a href="sql-advanced.html#cb68-24" tabindex="-1"></a>    <span class="cf">end</span> <span class="kw">as</span> grp2</span>
+<span id="cb68-25"><a href="sql-advanced.html#cb68-25" tabindex="-1"></a><span class="kw">from</span> tmp</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-16">Table 16: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">v1</th>
+<th align="left">v2</th>
+<th align="left">v3</th>
+<th align="left">grp2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">a</td>
+<td align="left">grp1</td>
+<td align="left">g1</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">b</td>
+<td align="left">grp1</td>
+<td align="left">g1</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">NA</td>
+<td align="left">grp1</td>
+<td align="left">g2</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">d</td>
+<td align="left">grp2</td>
+<td align="left">g3</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">e</td>
+<td align="left">grp2</td>
+<td align="left">g3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="filter" class="section level3 unnumbered hasAnchor">
+<h3>filter<a href="sql-advanced.html#filter" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Полезная, но достаточно малоизвестная конструкция - значения в колонках можно фильтровать по значениям других колонок.</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb69-1"><a href="sql-advanced.html#cb69-1" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb69-2"><a href="sql-advanced.html#cb69-2" tabindex="-1"></a>    tmp <span class="kw">as</span> (</span>
+<span id="cb69-3"><a href="sql-advanced.html#cb69-3" tabindex="-1"></a>        <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb69-4"><a href="sql-advanced.html#cb69-4" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb69-5"><a href="sql-advanced.html#cb69-5" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb69-6"><a href="sql-advanced.html#cb69-6" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb69-7"><a href="sql-advanced.html#cb69-7" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb69-8"><a href="sql-advanced.html#cb69-8" tabindex="-1"></a>                (<span class="dv">3</span>, <span class="kw">NULL</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb69-9"><a href="sql-advanced.html#cb69-9" tabindex="-1"></a>                (<span class="dv">4</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;grp2&#39;</span>),</span>
+<span id="cb69-10"><a href="sql-advanced.html#cb69-10" tabindex="-1"></a>                (<span class="dv">5</span>, <span class="st">&#39;e&#39;</span>, <span class="st">&#39;grp2&#39;</span>)</span>
+<span id="cb69-11"><a href="sql-advanced.html#cb69-11" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(v1, v2, v3)</span>
+<span id="cb69-12"><a href="sql-advanced.html#cb69-12" tabindex="-1"></a>    )</span>
+<span id="cb69-13"><a href="sql-advanced.html#cb69-13" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb69-14"><a href="sql-advanced.html#cb69-14" tabindex="-1"></a>  <span class="co">-- считаем количество строк, в которых в v3 есть значение grp1</span></span>
+<span id="cb69-15"><a href="sql-advanced.html#cb69-15" tabindex="-1"></a>    <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">filter</span>(<span class="kw">where</span> v3 <span class="op">=</span> <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb69-16"><a href="sql-advanced.html#cb69-16" tabindex="-1"></a>    <span class="co">-- одновременно считаем количество значений в колонке v1, для которых в v3 есть значение grp2</span></span>
+<span id="cb69-17"><a href="sql-advanced.html#cb69-17" tabindex="-1"></a>    <span class="fu">count</span>(v1) <span class="kw">filter</span>(<span class="kw">where</span> v3 <span class="op">=</span> <span class="st">&#39;grp2&#39;</span>)</span>
+<span id="cb69-18"><a href="sql-advanced.html#cb69-18" tabindex="-1"></a><span class="kw">from</span> tmp</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-17">Table 17: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="right">count</th>
+<th align="right">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="window-functions" class="section level2 unnumbered hasAnchor">
+<h2>Window functions<a href="sql-advanced.html#window-functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="row_number-over" class="section level3 unnumbered hasAnchor">
+<h3>row_number() over ()<a href="sql-advanced.html#row_number-over" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Select-запросы в SQL предназначены в первую очередь для извлечения подвыборок (из одной или нескольких таблиц, с определенным составом колонок). Поэтому какие-то более сложные операции бывает достаточно сложно сделать. Одними из таких операций являются действия с колонками, в которых учитываются значения колонки в предыдущих строках - например, кумулятивная сумма или сумма в определенном окне (количестве строк до текущей) и тому подобные.</p>
+<p>Такие операции делаются в SQL с помощью оконных функций, где под окном понимается определенный набор строк колонки, с которыми надо выполнить какие-то операции. Один из самых простых видов оконных функций - нумерация строк:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb70-1"><a href="sql-advanced.html#cb70-1" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb70-2"><a href="sql-advanced.html#cb70-2" tabindex="-1"></a>    tmp <span class="kw">as</span> (</span>
+<span id="cb70-3"><a href="sql-advanced.html#cb70-3" tabindex="-1"></a>        <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb70-4"><a href="sql-advanced.html#cb70-4" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb70-5"><a href="sql-advanced.html#cb70-5" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb70-6"><a href="sql-advanced.html#cb70-6" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb70-7"><a href="sql-advanced.html#cb70-7" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb70-8"><a href="sql-advanced.html#cb70-8" tabindex="-1"></a>                (<span class="dv">3</span>, <span class="kw">NULL</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb70-9"><a href="sql-advanced.html#cb70-9" tabindex="-1"></a>                (<span class="dv">4</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;grp2&#39;</span>),</span>
+<span id="cb70-10"><a href="sql-advanced.html#cb70-10" tabindex="-1"></a>                (<span class="dv">5</span>, <span class="st">&#39;e&#39;</span>, <span class="st">&#39;grp2&#39;</span>)</span>
+<span id="cb70-11"><a href="sql-advanced.html#cb70-11" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(v1, v2, v3)</span>
+<span id="cb70-12"><a href="sql-advanced.html#cb70-12" tabindex="-1"></a>    )</span>
+<span id="cb70-13"><a href="sql-advanced.html#cb70-13" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb70-14"><a href="sql-advanced.html#cb70-14" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb70-15"><a href="sql-advanced.html#cb70-15" tabindex="-1"></a>    <span class="co">-- row_number() - функция определения номера, over() - определение окна. </span></span>
+<span id="cb70-16"><a href="sql-advanced.html#cb70-16" tabindex="-1"></a>    <span class="co">-- так как в over() ничего не указано, под окном понимаются все строки таблицы</span></span>
+<span id="cb70-17"><a href="sql-advanced.html#cb70-17" tabindex="-1"></a>    <span class="fu">row_number</span>() <span class="kw">over</span>() <span class="kw">as</span> counter</span>
+<span id="cb70-18"><a href="sql-advanced.html#cb70-18" tabindex="-1"></a><span class="kw">from</span> tmp</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-18">Table 18: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">v1</th>
+<th align="left">v2</th>
+<th align="left">v3</th>
+<th align="right">counter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">a</td>
+<td align="left">grp1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">b</td>
+<td align="left">grp1</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">NA</td>
+<td align="left">grp1</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">d</td>
+<td align="left">grp2</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">e</td>
+<td align="left">grp2</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="over-partition-by" class="section level3 unnumbered hasAnchor">
+<h3>over (partition by)<a href="sql-advanced.html#over-partition-by" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Оконные операции можно выполнять в группах по значениям какой-то колонки, так же при этом можно сортировать строки по другим колонкам:</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb71-1"><a href="sql-advanced.html#cb71-1" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb71-2"><a href="sql-advanced.html#cb71-2" tabindex="-1"></a>    tmp <span class="kw">as</span> (</span>
+<span id="cb71-3"><a href="sql-advanced.html#cb71-3" tabindex="-1"></a>        <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb71-4"><a href="sql-advanced.html#cb71-4" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb71-5"><a href="sql-advanced.html#cb71-5" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb71-6"><a href="sql-advanced.html#cb71-6" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb71-7"><a href="sql-advanced.html#cb71-7" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb71-8"><a href="sql-advanced.html#cb71-8" tabindex="-1"></a>                (<span class="dv">3</span>, <span class="kw">NULL</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb71-9"><a href="sql-advanced.html#cb71-9" tabindex="-1"></a>                (<span class="dv">4</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;grp2&#39;</span>),</span>
+<span id="cb71-10"><a href="sql-advanced.html#cb71-10" tabindex="-1"></a>                (<span class="dv">5</span>, <span class="st">&#39;e&#39;</span>, <span class="st">&#39;grp2&#39;</span>)</span>
+<span id="cb71-11"><a href="sql-advanced.html#cb71-11" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(v1, v2, v3)</span>
+<span id="cb71-12"><a href="sql-advanced.html#cb71-12" tabindex="-1"></a>    )</span>
+<span id="cb71-13"><a href="sql-advanced.html#cb71-13" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb71-14"><a href="sql-advanced.html#cb71-14" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb71-15"><a href="sql-advanced.html#cb71-15" tabindex="-1"></a>    <span class="co">-- указываем, что окно бьется на группы в зависимости от значений v3</span></span>
+<span id="cb71-16"><a href="sql-advanced.html#cb71-16" tabindex="-1"></a>    <span class="fu">row_number</span>() <span class="kw">over</span>(<span class="kw">partition</span> <span class="kw">by</span> v3) <span class="kw">as</span> counter,</span>
+<span id="cb71-17"><a href="sql-advanced.html#cb71-17" tabindex="-1"></a>    <span class="co">-- указываем, что окно бьется на группы в зависимости от значений v3</span></span>
+<span id="cb71-18"><a href="sql-advanced.html#cb71-18" tabindex="-1"></a>    <span class="co">-- и одновременно сортируем значения по убыванию в зависимости от колонки v1</span></span>
+<span id="cb71-19"><a href="sql-advanced.html#cb71-19" tabindex="-1"></a>    <span class="fu">row_number</span>() <span class="kw">over</span>(<span class="kw">partition</span> <span class="kw">by</span> v3 <span class="kw">order</span> <span class="kw">by</span> v1 <span class="kw">desc</span>) <span class="kw">as</span> counter_rev</span>
+<span id="cb71-20"><a href="sql-advanced.html#cb71-20" tabindex="-1"></a><span class="kw">from</span> tmp</span>
+<span id="cb71-21"><a href="sql-advanced.html#cb71-21" tabindex="-1"></a><span class="kw">order</span> <span class="kw">by</span> v1</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-19">Table 19: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">v1</th>
+<th align="left">v2</th>
+<th align="left">v3</th>
+<th align="right">counter</th>
+<th align="right">counter_rev</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">a</td>
+<td align="left">grp1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">b</td>
+<td align="left">grp1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">NA</td>
+<td align="left">grp1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">d</td>
+<td align="left">grp2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">e</td>
+<td align="left">grp2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="total-sum" class="section level3 unnumbered hasAnchor">
+<h3>total sum<a href="sql-advanced.html#total-sum" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Другой пример запроса с оконной функцией – считаем общую сумму по колонке по всей таблице и записываем ее в отдельную колонку (значение суммы одно, просто размножается по количеству строк).</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb72-1"><a href="sql-advanced.html#cb72-1" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb72-2"><a href="sql-advanced.html#cb72-2" tabindex="-1"></a>    tmp <span class="kw">as</span> (</span>
+<span id="cb72-3"><a href="sql-advanced.html#cb72-3" tabindex="-1"></a>        <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb72-4"><a href="sql-advanced.html#cb72-4" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb72-5"><a href="sql-advanced.html#cb72-5" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb72-6"><a href="sql-advanced.html#cb72-6" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb72-7"><a href="sql-advanced.html#cb72-7" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb72-8"><a href="sql-advanced.html#cb72-8" tabindex="-1"></a>                (<span class="dv">3</span>, <span class="kw">NULL</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb72-9"><a href="sql-advanced.html#cb72-9" tabindex="-1"></a>                (<span class="dv">4</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;grp2&#39;</span>),</span>
+<span id="cb72-10"><a href="sql-advanced.html#cb72-10" tabindex="-1"></a>                (<span class="dv">5</span>, <span class="st">&#39;e&#39;</span>, <span class="st">&#39;grp2&#39;</span>)</span>
+<span id="cb72-11"><a href="sql-advanced.html#cb72-11" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(v1, v2, v3)</span>
+<span id="cb72-12"><a href="sql-advanced.html#cb72-12" tabindex="-1"></a>    )</span>
+<span id="cb72-13"><a href="sql-advanced.html#cb72-13" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb72-14"><a href="sql-advanced.html#cb72-14" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb72-15"><a href="sql-advanced.html#cb72-15" tabindex="-1"></a>    <span class="co">-- считаем сумму v1 по всем строкам таблицы</span></span>
+<span id="cb72-16"><a href="sql-advanced.html#cb72-16" tabindex="-1"></a>    <span class="fu">sum</span>(v1) <span class="kw">over</span>() <span class="kw">as</span> total_sum</span>
+<span id="cb72-17"><a href="sql-advanced.html#cb72-17" tabindex="-1"></a><span class="kw">from</span> tmp</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-20">Table 20: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">v1</th>
+<th align="left">v2</th>
+<th align="left">v3</th>
+<th align="right">total_sum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">a</td>
+<td align="left">grp1</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">b</td>
+<td align="left">grp1</td>
+<td align="right">15</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">NA</td>
+<td align="left">grp1</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">d</td>
+<td align="left">grp2</td>
+<td align="right">15</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">e</td>
+<td align="left">grp2</td>
+<td align="right">15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cumulative-sum" class="section level3 unnumbered hasAnchor">
+<h3>cumulative sum<a href="sql-advanced.html#cumulative-sum" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Более сложная конструкция для вычисления кумулятивной суммы. Здесь мы указываем, что хотим посчитать не просто сумму, а кумулятивную сумму. Кумулятивная сумма представляется как сумма всех значений колонки от начала и до текущей строки – окно, в котором считается сумма, с каждой строкой расширяется. Такое поведение задается аргументом range, в котором указывем границы (можно и другие границы указать):</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb73-1"><a href="sql-advanced.html#cb73-1" tabindex="-1"></a><span class="kw">with</span> </span>
+<span id="cb73-2"><a href="sql-advanced.html#cb73-2" tabindex="-1"></a>    tmp <span class="kw">as</span> (</span>
+<span id="cb73-3"><a href="sql-advanced.html#cb73-3" tabindex="-1"></a>        <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb73-4"><a href="sql-advanced.html#cb73-4" tabindex="-1"></a>        <span class="kw">from</span> (</span>
+<span id="cb73-5"><a href="sql-advanced.html#cb73-5" tabindex="-1"></a>            <span class="kw">values</span> </span>
+<span id="cb73-6"><a href="sql-advanced.html#cb73-6" tabindex="-1"></a>                (<span class="dv">1</span>, <span class="st">&#39;a&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb73-7"><a href="sql-advanced.html#cb73-7" tabindex="-1"></a>                (<span class="dv">2</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb73-8"><a href="sql-advanced.html#cb73-8" tabindex="-1"></a>                (<span class="dv">3</span>, <span class="kw">NULL</span>, <span class="st">&#39;grp1&#39;</span>),</span>
+<span id="cb73-9"><a href="sql-advanced.html#cb73-9" tabindex="-1"></a>                (<span class="dv">4</span>, <span class="st">&#39;d&#39;</span>, <span class="st">&#39;grp2&#39;</span>),</span>
+<span id="cb73-10"><a href="sql-advanced.html#cb73-10" tabindex="-1"></a>                (<span class="dv">5</span>, <span class="st">&#39;e&#39;</span>, <span class="st">&#39;grp2&#39;</span>)</span>
+<span id="cb73-11"><a href="sql-advanced.html#cb73-11" tabindex="-1"></a>        ) <span class="kw">as</span> tbl(v1, v2, v3)</span>
+<span id="cb73-12"><a href="sql-advanced.html#cb73-12" tabindex="-1"></a>    )</span>
+<span id="cb73-13"><a href="sql-advanced.html#cb73-13" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb73-14"><a href="sql-advanced.html#cb73-14" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb73-15"><a href="sql-advanced.html#cb73-15" tabindex="-1"></a>    <span class="co">-- для каждой строки считаем сумму v1 от начала до текущей строки</span></span>
+<span id="cb73-16"><a href="sql-advanced.html#cb73-16" tabindex="-1"></a>    <span class="fu">sum</span>(v1) <span class="kw">over</span>(<span class="kw">order</span> <span class="kw">by</span> v1 <span class="kw">range</span> <span class="kw">between</span> <span class="kw">unbounded</span> <span class="kw">preceding</span> <span class="kw">and</span> <span class="kw">current</span> <span class="kw">row</span>) <span class="kw">as</span> cum_sum</span>
+<span id="cb73-17"><a href="sql-advanced.html#cb73-17" tabindex="-1"></a><span class="kw">from</span> tmp</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-21">Table 21: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">v1</th>
+<th align="left">v2</th>
+<th align="left">v3</th>
+<th align="right">cum_sum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">a</td>
+<td align="left">grp1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">b</td>
+<td align="left">grp1</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">NA</td>
+<td align="left">grp1</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">d</td>
+<td align="left">grp2</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">e</td>
+<td align="left">grp2</td>
+<td align="right">15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="explain" class="section level2 unnumbered hasAnchor">
+<h2>explain<a href="sql-advanced.html#explain" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="plan" class="section level3 unnumbered hasAnchor">
+<h3>plan<a href="sql-advanced.html#plan" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Для оптимизации можно посмотреть план запроса, который составляет оптимизатор. Умение читать и интерпретировать подобные планы приходит с опытом, чем больше - тем лучше, я не настолько хорошо знаю эту область, чтобы полноценно про нее рассказывать. Здесь просто для иллюстрации, что такое вообще есть.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb74-1"><a href="sql-advanced.html#cb74-1" tabindex="-1"></a><span class="kw">explain</span></span>
+<span id="cb74-2"><a href="sql-advanced.html#cb74-2" tabindex="-1"></a>    <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb74-3"><a href="sql-advanced.html#cb74-3" tabindex="-1"></a>    <span class="kw">from</span> chars</span>
+<span id="cb74-4"><a href="sql-advanced.html#cb74-4" tabindex="-1"></a>    <span class="kw">where</span> planet_name <span class="op">=</span> <span class="st">&#39;Naboo&#39;</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-22">Table 22: </span>2 records</caption>
+<thead>
+<tr class="header">
+<th align="left">QUERY PLAN</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Seq Scan on chars (cost=0.00..2.96 rows=11 width=94)</td>
+</tr>
+<tr class="even">
+<td align="left">Filter: (planet_name = ‘Naboo’::text)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="analyze" class="section level3 unnumbered hasAnchor">
+<h3>analyze<a href="sql-advanced.html#analyze" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Когда мы явно указываем <code>analyze</code>, оптимизатор не просто создает план запроса, а реально выполняет запрос и выводит, сколько времени потребовалось выполнение того или иного этапа запроса.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb75-1"><a href="sql-advanced.html#cb75-1" tabindex="-1"></a><span class="kw">explain</span> <span class="kw">analyze</span></span>
+<span id="cb75-2"><a href="sql-advanced.html#cb75-2" tabindex="-1"></a>    <span class="kw">select</span> <span class="op">*</span> </span>
+<span id="cb75-3"><a href="sql-advanced.html#cb75-3" tabindex="-1"></a>    <span class="kw">from</span> chars</span>
+<span id="cb75-4"><a href="sql-advanced.html#cb75-4" tabindex="-1"></a>    <span class="kw">where</span> planet_name <span class="op">=</span> <span class="st">&#39;Naboo&#39;</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-23">Table 23: </span>5 records</caption>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">QUERY PLAN</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Seq Scan on chars (cost=0.00..2.96 rows=11 width=94) (actual time=0.022..0.024 rows=11 loops=1)</td>
+</tr>
+<tr class="even">
+<td align="left">Filter: (planet_name = ‘Naboo’::text)</td>
+</tr>
+<tr class="odd">
+<td align="left">Rows Removed by Filter: 66</td>
+</tr>
+<tr class="even">
+<td align="left">Planning time: 0.060 ms</td>
+</tr>
+<tr class="odd">
+<td align="left">Execution time: 0.047 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="sql.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "static"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

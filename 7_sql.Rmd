@@ -2,7 +2,10 @@
 
 ## Запись занятия {-}
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/o44EYYJJN_A?si=_IFjq6gmtMwyMDdb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/o44EYYJJN_A?si=X7JVJPX_aZNFfTKD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<br>
+
 
 ```{r load-packages, include = FALSE}
 pkgs <- c('data.table', 'RPostgreSQL')
@@ -292,41 +295,6 @@ con_odbc <- DBI::dbConnect(odbc::odbc(),
 
 <br>
 
-## Домашнее задание
+<!-- ## Домашнее задание -->
 
-Все данные лежат в схеме fw.
-
-### level 1 (IATYTD)
-
-Подсчитать, сколько было установок всего по каждой платформе.
-
-
-### level 2 (HNTR)
-
-Посчитайте, сколько заплатили всего пользователи, пришедшие по каждому медиасорсу (вам надо сджойнить таблички платежей и табличку инсталлов)
-
-### level 3 (HMP)
-
-Повторите предыдущее задание, только ограничьте на lifetime < 7 (дата инсталла есть и в таблички платежей. и в табличке инсталлов, которую будете джойнить)
-
-
-### level 4 (UV)
-
-Посчитайте ключевые метрики проекта за два месяца, в группировке по медиасорсам, возьмите lifetime < 7.
-Метрики: 
-
-- total_users
-- payers
-- gross
-- conversion
-- ARPU
-- ARPPU
-- avg_price (AOV, средний платеж)
-- avg_payment_count (APC, среднее количество платежей)
-
-
-### level 5 (N)
-
-Повторите предыдущее задание и добавьте строку Total (т.е. те же метрики, но без группировки по источникам трафика). Вам потребуется оператор union all.
-
-
+<!-- Повторить предыдущие задания по отрисовке графиков и вычислению метрик вовлечения и монетизации. Только вместо импорта и процессинга таблиц из файлов использовать sql-запросы. В идеале решение должно быть из создания подключения, sql-запроса и кода отрисовка графика, без дополнительных операций в R. -->
