@@ -168,7 +168,7 @@ Table: (\#tab:unnamed-chunk-5)1 records
 
 |date       |
 |:----------|
-|2023-11-26 |
+|2023-12-03 |
 
 </div>
 
@@ -186,7 +186,7 @@ Table: (\#tab:unnamed-chunk-6)1 records
 
 |  date_part|
 |----------:|
-| 1700956800|
+| 1701561600|
 
 </div>
 
@@ -222,7 +222,7 @@ Table: (\#tab:unnamed-chunk-8)1 records
 
 |?column?   |
 |:----------|
-|2023-11-25 |
+|2023-12-02 |
 
 </div>
 
@@ -772,11 +772,11 @@ Table: (\#tab:unnamed-chunk-23)5 records
 
 |QUERY PLAN                                                                                       |
 |:------------------------------------------------------------------------------------------------|
-|Seq Scan on chars  (cost=0.00..2.96 rows=11 width=94) (actual time=0.022..0.024 rows=11 loops=1) |
+|Seq Scan on chars  (cost=0.00..2.96 rows=11 width=94) (actual time=0.023..0.025 rows=11 loops=1) |
 |Filter: (planet_name = 'Naboo'::text)                                                            |
 |Rows Removed by Filter: 66                                                                       |
-|Planning time: 0.060 ms                                                                          |
-|Execution time: 0.047 ms                                                                         |
+|Planning time: 0.076 ms                                                                          |
+|Execution time: 0.048 ms                                                                         |
 
 </div>
 
