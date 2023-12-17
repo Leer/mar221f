@@ -42,6 +42,7 @@
 
 ```{r, include=FALSE, eval=FALSE}
 library(data.table)
+library(plotly)
 users <- fread('./data/hw_1/users.csv')
 # setnames(users, c('channel', 'install_dt'), c('media_source', 'dt'))
 
@@ -193,25 +194,38 @@ plot_ly(payments[, list(gross = sum(purchase)), keyby = list(pay_dt, media_sourc
 
 ```{r, include=FALSE}
 # присоединяем к инсталлам платежи
-ltv <- merge(users, payments, by = c('user_id', 'media_source'), all.x = TRUE)
+ltv <- merge(
+  users[, list(user_id, dt, media_source)],
+  # users[dt <= '2022-10-23', list(user_id, dt, media_source)], 
+  payments, 
+  by = c('user_id', 'media_source'), all.x = TRUE)
 ltv[, lifetime := as.Date(pay_dt) - as.Date(dt)]
 
 # ограничиваем - либо платежи за 7 дней, либо неплатящий
-ltv_stat <- ltv[lifetime < 7 | is.na(lifetime)]
+# ltv_stat <- ltv[lifetime < 7 | is.na(lifetime)]
+ltv_stat <- copy(ltv)
 
 # считаем статистики по источникам инсталлов и общий
 ltv_stat <- rbind(
   ltv_stat[, list(total_users = uniqueN(user_id),
              payers = uniqueN(user_id[!is.na(purchase)]),
              gross = sum(purchase, na.rm = TRUE),
-             n_purchases = sum(!is.na(purchase)),
-             CPI = mean(CPI, na.rm = TRUE)), by = media_source],
+             n_purchases = sum(!is.na(purchase))), by = media_source],
   ltv_stat[, list(media_source = 'Total',
              total_users = uniqueN(user_id),
              payers = uniqueN(user_id[!is.na(purchase)]),
              gross = sum(purchase, na.rm = TRUE),
-             n_purchases = sum(!is.na(purchase)),
-             CPI = mean(CPI, na.rm = TRUE))])
+             n_purchases = sum(!is.na(purchase)))])
+
+ltv_stat <- merge(
+  ltv_stat,
+  rbind(
+    users[, list(CPI = mean(CPI)), by = media_source],
+    users[, list(media_source = 'Total', CPI = mean(CPI, na.rm = TRUE))]
+  ),
+  # users[dt <= '2022-10-23', list(CPI = mean(CPI)), by = media_source],
+  by = 'media_source', all.x = TRUE
+)
 
 # добавляем еще статистики
 ltv_stat[, conversion := round(payers / total_users, 3)]
@@ -219,9 +233,13 @@ ltv_stat[, ARPU := round(gross / total_users, 3)]
 ltv_stat[, ARPPU := round(gross / payers, 3)]
 ltv_stat[, Av.purchases := round(n_purchases / payers, 1)]
 ltv_stat[, Av.bill := round(gross / n_purchases, 1)]
-ltv_stat[, CPI := round(CPI, 2)]
+# ltv_stat[, CPI := round(CPI, 2)]
 ltv_stat
 ```
+
+
+
+
 
 ```{r, include=FALSE}
 # собираем таблицу по распределению платежей в днях от инсталла

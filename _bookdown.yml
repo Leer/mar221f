@@ -19,7 +19,7 @@ rmd_files: [
   '9_abtest.Rmd',
   '11_nhst.Rmd',
   # '12_power.Rmd',
-  # '13_case.Rmd',
-  # 'hw_2.Rmd',
+  '13_case.Rmd',
+  'hw_2.Rmd',
   # '14_interview.Rmd'
 ]
